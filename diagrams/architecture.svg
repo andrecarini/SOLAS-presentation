@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 280 340" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Audio Input -->
+                        <rect x="90" y="5" width="100" height="30" rx="4" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+                        <text x="140" y="24" text-anchor="middle" font-size="10" fill="#0369a1">Áudio</text>
+
+                        <!-- Arrow -->
+                        <path d="M140 35 L140 50" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow4)"/>
+
+                        <!-- Whisper ASR -->
+                        <rect x="70" y="55" width="140" height="35" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+                        <text x="140" y="77" text-anchor="middle" font-size="10" font-weight="600" fill="#1e40af">Whisper ASR</text>
+
+                        <!-- Output 1: Transcript -->
+                        <path d="M210 72 L240 72" stroke="#16a34a" stroke-width="1" stroke-dasharray="3,2"/>
+                        <text x="245" y="76" font-size="8" fill="#166534">Transcrição</text>
+
+                        <!-- Arrow -->
+                        <path d="M140 90 L140 105" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow4)"/>
+
+                        <!-- LLM Translate -->
+                        <rect x="70" y="110" width="140" height="35" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+                        <text x="140" y="132" text-anchor="middle" font-size="10" font-weight="600" fill="#5b21b6">LLM: Traduzir</text>
+
+                        <!-- Output 2: Translation -->
+                        <path d="M210 127 L240 127" stroke="#16a34a" stroke-width="1" stroke-dasharray="3,2"/>
+                        <text x="245" y="131" font-size="8" fill="#166534">Tradução</text>
+
+                        <!-- Arrow -->
+                        <path d="M140 145 L140 160" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow4)"/>
+
+                        <!-- LLM Summarize -->
+                        <rect x="70" y="165" width="140" height="35" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+                        <text x="140" y="187" text-anchor="middle" font-size="10" font-weight="600" fill="#5b21b6">LLM: Resumir</text>
+
+                        <!-- Output 3: Summary -->
+                        <path d="M210 182 L240 182" stroke="#16a34a" stroke-width="1" stroke-dasharray="3,2"/>
+                        <text x="245" y="186" font-size="8" fill="#166534">Resumo</text>
+
+                        <!-- Arrow -->
+                        <path d="M140 200 L140 215" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow4)"/>
+
+                        <!-- LLM Podcast -->
+                        <rect x="70" y="220" width="140" height="35" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+                        <text x="140" y="242" text-anchor="middle" font-size="10" font-weight="600" fill="#5b21b6">LLM: Script</text>
+
+                        <!-- Output 4: Script -->
+                        <path d="M210 237 L240 237" stroke="#16a34a" stroke-width="1" stroke-dasharray="3,2"/>
+                        <text x="245" y="241" font-size="8" fill="#166534">Script</text>
+
+                        <!-- Arrow -->
+                        <path d="M140 255 L140 270" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow4)"/>
+
+                        <!-- XTTS TTS -->
+                        <rect x="70" y="275" width="140" height="35" rx="4" fill="#fce7f3" stroke="#db2777" stroke-width="1.5"/>
+                        <text x="140" y="297" text-anchor="middle" font-size="10" font-weight="600" fill="#be185d">XTTS TTS</text>
+
+                        <!-- Output 5: Audio -->
+                        <path d="M210 292 L240 292" stroke="#16a34a" stroke-width="1" stroke-dasharray="3,2"/>
+                        <text x="245" y="296" font-size="8" fill="#166534">Podcast</text>
+
+                        <defs>
+                            <marker id="arrow4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                                <path d="M0,0 L0,6 L6,3 z" fill="#64748b"/>
+                            </marker>
+                        </defs>
+                    </svg>

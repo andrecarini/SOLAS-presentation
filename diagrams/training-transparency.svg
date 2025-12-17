@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 340 180" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Table header -->
+                        <rect x="5" y="5" width="70" height="25" fill="#f1f5f9"/>
+                        <text x="40" y="22" text-anchor="middle" font-size="8" font-weight="600" fill="#334155">Modelo</text>
+                        <rect x="75" y="5" width="50" height="25" fill="#f1f5f9"/>
+                        <text x="100" y="22" text-anchor="middle" font-size="8" font-weight="600" fill="#334155">Pesos</text>
+                        <rect x="125" y="5" width="50" height="25" fill="#f1f5f9"/>
+                        <text x="150" y="22" text-anchor="middle" font-size="8" font-weight="600" fill="#334155">Dados</text>
+                        <rect x="175" y="5" width="50" height="25" fill="#f1f5f9"/>
+                        <text x="200" y="22" text-anchor="middle" font-size="8" font-weight="600" fill="#334155">Arq.</text>
+                        <rect x="225" y="5" width="55" height="25" fill="#f1f5f9"/>
+                        <text x="252" y="22" text-anchor="middle" font-size="8" font-weight="600" fill="#334155">Código</text>
+                        <rect x="280" y="5" width="55" height="25" fill="#f1f5f9"/>
+                        <text x="307" y="22" text-anchor="middle" font-size="8" font-weight="600" fill="#334155">Custo</text>
+
+                        <!-- Whisper row -->
+                        <text x="40" y="47" text-anchor="middle" font-size="8" fill="#334155">Whisper</text>
+                        <text x="100" y="47" text-anchor="middle" font-size="10" fill="#16a34a">✓</text>
+                        <text x="150" y="47" text-anchor="middle" font-size="10" fill="#dc2626">✗</text>
+                        <text x="200" y="47" text-anchor="middle" font-size="10" fill="#16a34a">✓</text>
+                        <text x="252" y="47" text-anchor="middle" font-size="10" fill="#dc2626">✗</text>
+                        <text x="307" y="47" text-anchor="middle" font-size="10" fill="#dc2626">✗</text>
+
+                        <!-- Qwen2 row -->
+                        <rect x="5" y="55" width="330" height="25" fill="#f8fafc"/>
+                        <text x="40" y="72" text-anchor="middle" font-size="8" fill="#334155">Qwen2</text>
+                        <text x="100" y="72" text-anchor="middle" font-size="10" fill="#16a34a">✓</text>
+                        <text x="150" y="72" text-anchor="middle" font-size="10" fill="#dc2626">✗</text>
+                        <text x="200" y="72" text-anchor="middle" font-size="10" fill="#16a34a">✓</text>
+                        <text x="252" y="72" text-anchor="middle" font-size="10" fill="#dc2626">✗</text>
+                        <text x="307" y="72" text-anchor="middle" font-size="10" fill="#dc2626">✗</text>
+
+                        <!-- Mistral row -->
+                        <text x="40" y="97" text-anchor="middle" font-size="8" fill="#334155">Mistral-7B</text>
+                        <text x="100" y="97" text-anchor="middle" font-size="10" fill="#16a34a">✓</text>
+                        <text x="150" y="97" text-anchor="middle" font-size="10" fill="#dc2626">✗</text>
+                        <text x="200" y="97" text-anchor="middle" font-size="10" fill="#16a34a">✓</text>
+                        <text x="252" y="97" text-anchor="middle" font-size="10" fill="#dc2626">✗</text>
+                        <text x="307" y="97" text-anchor="middle" font-size="10" fill="#dc2626">✗</text>
+
+                        <!-- Phi-3 row -->
+                        <rect x="5" y="105" width="330" height="25" fill="#f8fafc"/>
+                        <text x="40" y="122" text-anchor="middle" font-size="8" fill="#334155">Phi-3</text>
+                        <text x="100" y="122" text-anchor="middle" font-size="10" fill="#16a34a">✓</text>
+                        <text x="150" y="122" text-anchor="middle" font-size="10" fill="#dc2626">✗</text>
+                        <text x="200" y="122" text-anchor="middle" font-size="10" fill="#16a34a">✓</text>
+                        <text x="252" y="122" text-anchor="middle" font-size="10" fill="#dc2626">✗</text>
+                        <text x="307" y="122" text-anchor="middle" font-size="10" fill="#dc2626">✗</text>
+
+                        <!-- XTTS row -->
+                        <text x="40" y="147" text-anchor="middle" font-size="8" fill="#334155">XTTS</text>
+                        <text x="100" y="147" text-anchor="middle" font-size="10" fill="#16a34a">✓</text>
+                        <text x="150" y="147" text-anchor="middle" font-size="8" fill="#d97706">~</text>
+                        <text x="200" y="147" text-anchor="middle" font-size="10" fill="#16a34a">✓</text>
+                        <text x="252" y="147" text-anchor="middle" font-size="10" fill="#16a34a">✓</text>
+                        <text x="307" y="147" text-anchor="middle" font-size="8" fill="#d97706">~</text>
+
+                        <!-- Legend -->
+                        <text x="170" y="170" text-anchor="middle" font-size="7" fill="#64748b">✓ Disponível  ✗ Não disponível  ~ Parcial</text>
+                    </svg>

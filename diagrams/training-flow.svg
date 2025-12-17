@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 340 260" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Long document -->
+                        <rect x="20" y="10" width="300" height="30" rx="4" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+                        <text x="170" y="30" text-anchor="middle" font-size="10" fill="#334155">Documento Longo (6000+ tokens)</text>
+
+                        <!-- Step 1: Split -->
+                        <text x="330" y="55" text-anchor="end" font-size="8" fill="#64748b">1. Dividir</text>
+
+                        <!-- Arrows down to chunks -->
+                        <path d="M70 40 L70 70" stroke="#64748b" stroke-width="1" marker-end="url(#arrChunk)"/>
+                        <path d="M130 40 L130 70" stroke="#64748b" stroke-width="1" marker-end="url(#arrChunk)"/>
+                        <path d="M200 40 L200 70" stroke="#64748b" stroke-width="1" marker-end="url(#arrChunk)"/>
+                        <path d="M270 40 L270 70" stroke="#64748b" stroke-width="1" marker-end="url(#arrChunk)"/>
+
+                        <!-- Chunks -->
+                        <rect x="30" y="75" width="65" height="30" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+                        <text x="62" y="95" text-anchor="middle" font-size="9" fill="#5b21b6">Chunk 1</text>
+                        <rect x="100" y="75" width="65" height="30" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+                        <text x="132" y="95" text-anchor="middle" font-size="9" fill="#5b21b6">Chunk 2</text>
+                        <rect x="170" y="75" width="65" height="30" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+                        <text x="202" y="95" text-anchor="middle" font-size="9" fill="#5b21b6">Chunk 3</text>
+                        <rect x="240" y="75" width="65" height="30" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+                        <text x="272" y="95" text-anchor="middle" font-size="9" fill="#5b21b6">...</text>
+
+                        <!-- Step 2: Summarize -->
+                        <text x="330" y="125" text-anchor="end" font-size="8" fill="#64748b">2. Resumir</text>
+
+                        <!-- Arrows down to summaries -->
+                        <path d="M62 105 L62 135" stroke="#64748b" stroke-width="1" marker-end="url(#arrChunk)"/>
+                        <path d="M132 105 L132 135" stroke="#64748b" stroke-width="1" marker-end="url(#arrChunk)"/>
+                        <path d="M202 105 L202 135" stroke="#64748b" stroke-width="1" marker-end="url(#arrChunk)"/>
+                        <path d="M272 105 L272 135" stroke="#64748b" stroke-width="1" marker-end="url(#arrChunk)"/>
+
+                        <!-- Partial summaries -->
+                        <rect x="30" y="140" width="65" height="30" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+                        <text x="62" y="160" text-anchor="middle" font-size="8" fill="#1e40af">Resumo 1</text>
+                        <rect x="100" y="140" width="65" height="30" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+                        <text x="132" y="160" text-anchor="middle" font-size="8" fill="#1e40af">Resumo 2</text>
+                        <rect x="170" y="140" width="65" height="30" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+                        <text x="202" y="160" text-anchor="middle" font-size="8" fill="#1e40af">Resumo 3</text>
+                        <rect x="240" y="140" width="65" height="30" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+                        <text x="272" y="160" text-anchor="middle" font-size="8" fill="#1e40af">...</text>
+
+                        <!-- Step 3: Merge -->
+                        <text x="330" y="195" text-anchor="end" font-size="8" fill="#64748b">3. Combinar</text>
+
+                        <!-- Arrows down to final -->
+                        <path d="M62 170 L170 200" stroke="#64748b" stroke-width="1"/>
+                        <path d="M132 170 L170 200" stroke="#64748b" stroke-width="1"/>
+                        <path d="M202 170 L170 200" stroke="#64748b" stroke-width="1"/>
+                        <path d="M272 170 L170 200" stroke="#64748b" stroke-width="1" marker-end="url(#arrChunk)"/>
+
+                        <!-- Final summary -->
+                        <rect x="90" y="210" width="160" height="35" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+                        <text x="170" y="232" text-anchor="middle" font-size="10" font-weight="600" fill="#166534">Resumo Final</text>
+
+                        <defs>
+                            <marker id="arrChunk" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                                <path d="M0,0 L0,6 L6,3 z" fill="#64748b"/>
+                            </marker>
+                        </defs>
+                    </svg>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Sequential Processing -->
+                        <text x="85" y="15" text-anchor="middle" font-size="9" font-weight="600" fill="#334155">Processamento Sequencial</text>
+                        <!-- Words -->
+                        <rect x="10" y="25" width="30" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+                        <text x="25" y="39" text-anchor="middle" font-size="7" fill="#166534">The</text>
+                        <rect x="45" y="25" width="30" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+                        <text x="60" y="39" text-anchor="middle" font-size="7" fill="#166534">cat</text>
+                        <rect x="80" y="25" width="30" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+                        <text x="95" y="39" text-anchor="middle" font-size="7" fill="#166534">sat</text>
+                        <rect x="115" y="25" width="30" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+                        <text x="130" y="39" text-anchor="middle" font-size="7" fill="#166534">...</text>
+                        <!-- Hidden states -->
+                        <circle cx="25" cy="65" r="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/>
+                        <circle cx="60" cy="65" r="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/>
+                        <circle cx="95" cy="65" r="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/>
+                        <circle cx="130" cy="65" r="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/>
+                        <!-- Vertical arrows -->
+                        <path d="M25 45 L25 55" stroke="#64748b" stroke-width="1" marker-end="url(#arr)"/>
+                        <path d="M60 45 L60 55" stroke="#64748b" stroke-width="1" marker-end="url(#arr)"/>
+                        <path d="M95 45 L95 55" stroke="#64748b" stroke-width="1" marker-end="url(#arr)"/>
+                        <path d="M130 45 L130 55" stroke="#64748b" stroke-width="1" marker-end="url(#arr)"/>
+                        <!-- Sequential arrows -->
+                        <path d="M35 65 L50 65" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrRed)"/>
+                        <path d="M70 65 L85 65" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrRed)"/>
+                        <path d="M105 65 L120 65" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrRed)"/>
+                        <text x="85" y="85" text-anchor="middle" font-size="7" fill="#dc2626">Um por vez →</text>
+
+                        <!-- Self-Attention -->
+                        <text x="255" y="15" text-anchor="middle" font-size="9" font-weight="600" fill="#334155">Self-Attention</text>
+                        <!-- Words -->
+                        <rect x="180" y="25" width="30" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+                        <text x="195" y="39" text-anchor="middle" font-size="7" fill="#166534">The</text>
+                        <rect x="215" y="25" width="30" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+                        <text x="230" y="39" text-anchor="middle" font-size="7" fill="#166534">cat</text>
+                        <rect x="250" y="25" width="30" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+                        <text x="265" y="39" text-anchor="middle" font-size="7" fill="#166534">sat</text>
+                        <rect x="285" y="25" width="30" height="20" rx="3" fill="#dcfce7" stroke="#16a34a" stroke-width="1"/>
+                        <text x="300" y="39" text-anchor="middle" font-size="7" fill="#166534">...</text>
+                        <!-- Hidden states -->
+                        <circle cx="195" cy="65" r="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/>
+                        <circle cx="230" cy="65" r="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/>
+                        <circle cx="265" cy="65" r="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/>
+                        <circle cx="300" cy="65" r="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/>
+                        <!-- Vertical arrows -->
+                        <path d="M195 45 L195 55" stroke="#64748b" stroke-width="1" marker-end="url(#arr)"/>
+                        <path d="M230 45 L230 55" stroke="#64748b" stroke-width="1" marker-end="url(#arr)"/>
+                        <path d="M265 45 L265 55" stroke="#64748b" stroke-width="1" marker-end="url(#arr)"/>
+                        <path d="M300 45 L300 55" stroke="#64748b" stroke-width="1" marker-end="url(#arr)"/>
+                        <!-- Attention connections -->
+                        <path d="M195 73 Q210 95 230 73" stroke="#22c55e" stroke-width="0.8" fill="none"/>
+                        <path d="M195 73 Q230 105 265 73" stroke="#22c55e" stroke-width="0.8" fill="none"/>
+                        <path d="M195 73 Q250 115 300 73" stroke="#22c55e" stroke-width="0.8" fill="none" opacity="0.5"/>
+                        <path d="M230 73 Q247 95 265 73" stroke="#22c55e" stroke-width="0.8" fill="none"/>
+                        <path d="M230 73 Q265 105 300 73" stroke="#22c55e" stroke-width="0.8" fill="none"/>
+                        <path d="M265 73 Q282 95 300 73" stroke="#22c55e" stroke-width="0.8" fill="none"/>
+                        <text x="255" y="125" text-anchor="middle" font-size="7" fill="#166534">Todos em paralelo</text>
+
+                        <!-- Comparison summary -->
+                        <rect x="10" y="145" width="150" height="65" rx="4" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+                        <text x="85" y="162" text-anchor="middle" font-size="8" font-weight="600" fill="#dc2626">RNNs/LSTMs</text>
+                        <text x="85" y="175" text-anchor="middle" font-size="7" fill="#7f1d1d">Dependências longas</text>
+                        <text x="85" y="186" text-anchor="middle" font-size="7" fill="#7f1d1d">difíceis de capturar</text>
+                        <text x="85" y="200" text-anchor="middle" font-size="7" fill="#7f1d1d">Treinamento lento</text>
+
+                        <rect x="180" y="145" width="150" height="65" rx="4" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+                        <text x="255" y="162" text-anchor="middle" font-size="8" font-weight="600" fill="#166534">Transformers</text>
+                        <text x="255" y="175" text-anchor="middle" font-size="7" fill="#14532d">Dependências capturadas</text>
+                        <text x="255" y="186" text-anchor="middle" font-size="7" fill="#14532d">independente da distância</text>
+                        <text x="255" y="200" text-anchor="middle" font-size="7" fill="#14532d">Treinamento paralelo</text>
+
+                        <defs>
+                            <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                                <path d="M0,0 L0,6 L6,3 z" fill="#64748b"/>
+                            </marker>
+                            <marker id="arrRed" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                                <path d="M0,0 L0,6 L6,3 z" fill="#dc2626"/>
+                            </marker>
+                        </defs>
+                    </svg>

@@ -1,1057 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOLAS — Defesa de TCC</title>
-    <style>
-        /* ========================================
-           CSS VARIABLES & RESET
-           ======================================== */
-        :root {
-            /* Vibrant tech palette */
-            --bg-primary: #f8fafc;
-            --bg-secondary: #e2e8f0;
-            --bg-dark: #0f172a;
-            --text-primary: #0f172a;
-            --text-secondary: #334155;
-            --text-muted: #64748b;
-            --accent: #2563eb;
-            --accent-light: #60a5fa;
-            --accent-soft: rgba(37, 99, 235, 0.1);
-            --accent-secondary: #8b5cf6;
-            --accent-tertiary: #06b6d4;
-            --gradient-primary: linear-gradient(135deg, #2563eb 0%, #8b5cf6 100%);
-            --gradient-secondary: linear-gradient(135deg, #06b6d4 0%, #2563eb 100%);
-            --gradient-warm: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
-            --border: #cbd5e1;
-            --grid-color: rgba(37, 99, 235, 0.06);
-
-            /* Typography - clean, modern, technical */
-            --font-display: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            --font-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
-
-            /* Spacing - tighter for video call readability */
-            --space-xs: 0.4rem;
-            --space-sm: 0.6rem;
-            --space-md: 1rem;
-            --space-lg: 1.5rem;
-            --space-xl: 2.5rem;
-
-            /* Transitions */
-            --transition-fast: 0.2s ease;
-            --transition-smooth: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            font-size: 16px;
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: var(--font-body);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow: hidden;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* ========================================
-           PRESENTATION CONTAINER
-           ======================================== */
-        .presentation {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* ========================================
-           SLIDE STYLES
-           ======================================== */
-        .slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: var(--space-xl) var(--space-xl) calc(var(--space-xl) + 40px);
-            opacity: 0;
-            pointer-events: none;
-            transform: translate3d(0, 20px, 0);
-            transition:
-                opacity 0.4s ease-out,
-                transform 0.4s ease-out;
-            background: var(--bg-primary);
-            will-change: transform, opacity;
-            backface-visibility: hidden;
-        }
-
-        .slide.active {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translate3d(0, 0, 0);
-        }
-
-        .slide.prev {
-            transform: translate3d(0, -20px, 0);
-        }
-
-        /* Dot matrix pattern - visible at edges, faded in center */
-        .slide::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: radial-gradient(rgba(37, 99, 235, 0.5) 1.5px, transparent 1.5px);
-            background-size: 20px 20px;
-            pointer-events: none;
-            mask-image: linear-gradient(to right,
-                    rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 3%, rgba(0,0,0,0.1) 10%, transparent 20%,
-                    transparent 65%, rgba(0,0,0,0.2) 80%, rgba(0,0,0,0.6) 92%, rgba(0,0,0,0.9) 100%),
-                linear-gradient(to bottom,
-                    rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 3%, rgba(0,0,0,0.1) 10%, transparent 20%,
-                    transparent 65%, rgba(0,0,0,0.25) 82%, rgba(0,0,0,0.6) 93%, rgba(0,0,0,0.85) 100%);
-            mask-composite: add;
-            -webkit-mask-image: linear-gradient(to right,
-                    rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 3%, rgba(0,0,0,0.1) 10%, transparent 20%,
-                    transparent 65%, rgba(0,0,0,0.2) 80%, rgba(0,0,0,0.6) 92%, rgba(0,0,0,0.9) 100%),
-                linear-gradient(to bottom,
-                    rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 3%, rgba(0,0,0,0.1) 10%, transparent 20%,
-                    transparent 65%, rgba(0,0,0,0.25) 82%, rgba(0,0,0,0.6) 93%, rgba(0,0,0,0.85) 100%);
-            -webkit-mask-composite: source-over;
-        }
-
-        /* Color accent glows at edges */
-        .slide::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background:
-                linear-gradient(to right, rgba(37, 99, 235, 0.08) 0%, rgba(37, 99, 235, 0.03) 10%, transparent 25%),
-                linear-gradient(to bottom, rgba(139, 92, 246, 0.06) 0%, rgba(139, 92, 246, 0.02) 8%, transparent 20%),
-                linear-gradient(to left, rgba(6, 182, 212, 0.05) 0%, transparent 15%),
-                linear-gradient(to top, rgba(139, 92, 246, 0.03) 0%, transparent 10%);
-            pointer-events: none;
-        }
-
-
-        /* ========================================
-           TYPOGRAPHY
-           ======================================== */
-        .slide-title {
-            font-family: var(--font-display);
-            font-size: clamp(3rem, 6vw, 4.5rem);
-            font-weight: 600;
-            line-height: 1.15;
-            margin-bottom: var(--space-md);
-            color: var(--text-primary);
-            letter-spacing: -0.03em;
-        }
-
-        .slide-subtitle {
-            font-family: var(--font-body);
-            font-size: clamp(1.4rem, 2.5vw, 1.8rem);
-            font-weight: 400;
-            color: var(--text-secondary);
-            margin-bottom: var(--space-md);
-        }
-
-        .slide-content {
-            font-size: clamp(1.25rem, 2vw, 1.5rem);
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .slide-content p {
-            margin-bottom: var(--space-sm);
-        }
-
-        .slide-content ul, .slide-content ol {
-            margin-left: var(--space-md);
-            margin-bottom: var(--space-sm);
-        }
-
-        .slide-content li {
-            margin-bottom: var(--space-sm);
-            padding-left: var(--space-xs);
-        }
-
-        .slide-content li::marker {
-            color: var(--accent);
-        }
-
-        /* Accent line decoration - gradient style */
-        .accent-line {
-            display: flex;
-            gap: 4px;
-            margin-bottom: var(--space-sm);
-        }
-
-        .accent-line::before {
-            content: '';
-            width: 40px;
-            height: 4px;
-            background: var(--gradient-primary);
-            border-radius: 2px;
-        }
-
-        .accent-line::after {
-            content: '';
-            width: 12px;
-            height: 4px;
-            background: var(--accent-tertiary);
-            border-radius: 2px;
-        }
-
-        /* ========================================
-           SLIDE LAYOUT VARIATIONS
-           ======================================== */
-
-        /* Standard slide - horizontal layout */
-        .slide--standard {
-            display: grid;
-            grid-template-columns: minmax(220px, 320px) 1fr;
-            grid-template-rows: 1fr;
-            gap: var(--space-xl);
-            align-items: center;
-        }
-
-        .slide--standard .slide-header {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            border-right: 3px solid transparent;
-            border-image: var(--gradient-primary) 1;
-            padding-right: var(--space-lg);
-            height: 60%;
-        }
-
-        .slide--standard .slide-title {
-            font-size: clamp(2rem, 4vw, 2.8rem);
-        }
-
-        .slide--standard .slide-subtitle {
-            font-size: clamp(1rem, 1.8vw, 1.2rem);
-        }
-
-        .slide--standard .slide-main {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-        }
-
-        /* Title slide - gradient background */
-        .slide--title {
-            text-align: center;
-            align-items: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: var(--space-lg);
-            padding-top: 10vh;
-            padding-bottom: 12vh;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            color: white;
-        }
-
-        .slide--title::before {
-            background-image: radial-gradient(rgba(96, 165, 250, 0.15) 1.5px, transparent 1.5px);
-            mask-image: none;
-            -webkit-mask-image: none;
-        }
-
-        .slide--title::after {
-            background: radial-gradient(ellipse at 30% 20%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
-                        radial-gradient(ellipse at 70% 80%, rgba(6, 182, 212, 0.2) 0%, transparent 50%);
-            width: 100%;
-            height: 100%;
-        }
-
-        .slide--title .accent-line {
-            justify-content: center;
-        }
-
-        .slide--title .accent-line::before {
-            background: var(--gradient-primary);
-        }
-
-        .slide--title .accent-line::after {
-            background: var(--accent-tertiary);
-        }
-
-        .slide--title .slide-title {
-            font-size: clamp(2.4rem, 4.5vw, 3.5rem);
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            max-width: 1000px;
-            line-height: 1.2;
-            text-wrap: balance;
-            color: white;
-        }
-
-        .slide--title .slide-subtitle {
-            font-size: clamp(1.5rem, 2.5vw, 2rem);
-            margin-top: var(--space-md);
-            background: var(--gradient-secondary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 500;
-        }
-
-        .slide--title .slide-content {
-            margin-top: auto;
-            padding-top: var(--space-xl);
-        }
-
-        .slide--title .slide-content p {
-            font-size: clamp(1.1rem, 1.8vw, 1.4rem);
-            margin-bottom: var(--space-sm);
-            color: #94a3b8;
-        }
-
-        .slide--title .slide-number {
-            background: rgba(255, 255, 255, 0.1);
-            -webkit-background-clip: padding-box;
-            background-clip: padding-box;
-            color: rgba(255, 255, 255, 0.7);
-            padding: 0.3em 0.6em;
-            border-radius: 6px;
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            -webkit-text-fill-color: initial;
-        }
-
-        /* Frosted glass UI on dark slides */
-        .on-dark-slide .nav-controls {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        .on-dark-slide .nav-btn {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .on-dark-slide .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-        }
-
-        .on-dark-slide .slide-counter {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .on-dark-slide .slide-dots .dot {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .on-dark-slide .slide-dots .dot:hover {
-            background: rgba(255, 255, 255, 0.4);
-        }
-
-        .on-dark-slide .slide-dots .dot.active {
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 0 16px rgba(255, 255, 255, 0.5);
-        }
-
-        /* Two column layout */
-        .slide--two-col {
-            display: grid;
-            grid-template-columns: minmax(220px, 320px) 1fr 1fr;
-            gap: var(--space-xl);
-            align-items: center;
-        }
-
-        .slide--two-col .slide-header {
-            grid-column: 1;
-            border-right: 3px solid transparent;
-            border-image: var(--gradient-secondary) 1;
-            padding-right: var(--space-lg);
-            height: 60%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .slide--two-col .slide-title {
-            font-size: clamp(2rem, 4vw, 2.8rem);
-        }
-
-        .slide--two-col .slide-subtitle {
-            font-size: clamp(1rem, 1.8vw, 1.2rem);
-        }
-
-        .slide--two-col .col {
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .slide--two-col .col-title {
-            font-family: var(--font-display);
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: var(--space-sm);
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Split layout - asymmetric */
-        .slide--split {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            padding: 0;
-            gap: 0;
-        }
-
-        .slide--split .slide-left {
-            padding: var(--space-xl);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .slide--split .slide-right {
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: var(--space-lg);
-            position: relative;
-        }
-
-        .slide--split .slide-right::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: var(--gradient-primary);
-        }
-
-        /* ========================================
-           PLACEHOLDER ELEMENTS
-           ======================================== */
-        .placeholder-image {
-            width: 100%;
-            max-width: 400px;
-            aspect-ratio: 4/3;
-            background: linear-gradient(135deg, white 0%, #f8fafc 100%);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            border: 1px solid var(--border);
-            position: relative;
-            box-shadow: 0 8px 32px rgba(37, 99, 235, 0.1);
-        }
-
-        .placeholder-image::before {
-            content: '';
-            position: absolute;
-            inset: 12px;
-            border: 2px dashed rgba(37, 99, 235, 0.2);
-            border-radius: 10px;
-        }
-
-        .placeholder-image::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-primary);
-            border-radius: 16px 16px 0 0;
-        }
-
-        .placeholder-chart {
-            width: 100%;
-            max-width: 500px;
-            aspect-ratio: 16/9;
-            background: linear-gradient(135deg, white 0%, #f8fafc 100%);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            border: 1px solid var(--border);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(37, 99, 235, 0.1);
-        }
-
-        .placeholder-chart::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-secondary);
-        }
-
-        /* Decorative chart bars */
-        .placeholder-chart::before {
-            content: '';
-            position: absolute;
-            bottom: 15%;
-            left: 10%;
-            right: 10%;
-            height: 50%;
-            background:
-                linear-gradient(to right,
-                    rgba(37, 99, 235, 0.3) 0%, rgba(37, 99, 235, 0.3) 10%,
-                    transparent 10%, transparent 15%,
-                    rgba(6, 182, 212, 0.3) 15%, rgba(6, 182, 212, 0.3) 30%,
-                    transparent 30%, transparent 35%,
-                    rgba(139, 92, 246, 0.3) 35%, rgba(139, 92, 246, 0.3) 48%,
-                    transparent 48%, transparent 53%,
-                    rgba(37, 99, 235, 0.3) 53%, rgba(37, 99, 235, 0.3) 75%,
-                    transparent 75%, transparent 80%,
-                    rgba(236, 72, 153, 0.3) 80%, rgba(236, 72, 153, 0.3) 90%,
-                    transparent 90%
-                );
-        }
-
-        /* Quote styling */
-        .quote {
-            font-family: var(--font-display);
-            font-size: clamp(1.6rem, 3vw, 2.2rem);
-            font-weight: 400;
-            font-style: normal;
-            color: var(--text-secondary);
-            padding-left: var(--space-md);
-            border-left: 4px solid;
-            border-image: linear-gradient(180deg, var(--accent), var(--accent-light)) 1;
-            margin: var(--space-md) 0;
-            max-width: 55ch;
-            line-height: 1.4;
-        }
-
-        .quote-author {
-            font-family: var(--font-mono);
-            font-size: 1rem;
-            font-style: normal;
-            color: var(--text-muted);
-            margin-top: var(--space-sm);
-        }
-
-        /* ========================================
-           NAVIGATION & UI
-           ======================================== */
-        .nav-controls {
-            position: fixed;
-            bottom: var(--space-md);
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: var(--space-xs);
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 8px 16px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.1);
-            border: 1px solid rgba(37, 99, 235, 0.1);
-            backdrop-filter: blur(12px);
-            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
-        }
-
-        .nav-btn {
-            width: 32px;
-            height: 32px;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            cursor: pointer;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .nav-btn:hover {
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
-            color: var(--accent);
-        }
-
-        .nav-btn:active {
-            transform: scale(0.95);
-        }
-
-        .nav-btn svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        .slide-counter {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            min-width: 50px;
-            text-align: center;
-            letter-spacing: 0.02em;
-            transition: color 0.4s ease;
-        }
-
-        /* Progress bar */
-        .progress-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 3px;
-            background: var(--gradient-primary);
-            transition: width 0.3s ease-out;
-            z-index: 100;
-            will-change: width;
-        }
-
-        /* Slide dots */
-        .slide-dots {
-            position: fixed;
-            right: var(--space-md);
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            z-index: 100;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--border);
-            border: 1px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s ease-out;
-            will-change: transform;
-        }
-
-        .dot:hover {
-            background: var(--accent-light);
-            transform: scale(1.2);
-        }
-
-        .dot.active {
-            background: var(--gradient-primary);
-            transform: scale(1.4);
-            box-shadow: 0 0 12px rgba(37, 99, 235, 0.5);
-        }
-
-        /* ========================================
-           METADATA & FOOTER
-           ======================================== */
-        .slide-meta {
-            position: absolute;
-            bottom: var(--space-md);
-            left: var(--space-xl);
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            letter-spacing: 0.05em;
-        }
-
-        .slide-number {
-            position: absolute;
-            bottom: var(--space-md);
-            right: var(--space-xl);
-            font-family: var(--font-mono);
-            font-size: 0.9rem;
-            font-weight: 600;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 0.02em;
-        }
-
-        /* ========================================
-           SPECIAL ELEMENTS
-           ======================================== */
-        .highlight {
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 600;
-        }
-
-        .tag {
-            display: inline-block;
-            padding: 0.25em 0.7em;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
-            color: var(--accent);
-            font-family: var(--font-mono);
-            font-size: 0.85em;
-            border-radius: 6px;
-            font-weight: 600;
-            border: 1px solid rgba(37, 99, 235, 0.2);
-        }
-
-        .tag--cyan {
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(37, 99, 235, 0.15) 100%);
-            color: var(--accent-tertiary);
-            border-color: rgba(6, 182, 212, 0.2);
-        }
-
-        .tag--purple {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);
-            color: var(--accent-secondary);
-            border-color: rgba(139, 92, 246, 0.2);
-        }
-
-        .card {
-            background: white;
-            padding: var(--space-md) var(--space-lg);
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.08);
-            border: 1px solid var(--border);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--gradient-primary);
-        }
-
-        .card:nth-child(2)::before {
-            background: var(--gradient-secondary);
-        }
-
-        .card:nth-child(3)::before {
-            background: linear-gradient(180deg, #8b5cf6 0%, #ec4899 100%);
-        }
-
-        .card-title {
-            font-family: var(--font-display);
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: var(--space-xs);
-            color: var(--text-primary);
-        }
-
-        .card-text {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-
-        /* Grid for cards */
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--space-md);
-        }
-
-        .slide--standard .card-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        /* ========================================
-           RESPONSIVE ADJUSTMENTS
-           ======================================== */
-        @media (max-width: 900px) {
-            .slide--standard {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto 1fr;
-            }
-
-            .slide--standard .slide-header {
-                border-right: none;
-                border-bottom: 3px solid transparent;
-                border-image: var(--gradient-primary) 1;
-                padding-right: 0;
-                padding-bottom: var(--space-md);
-                height: auto;
-            }
-
-            .slide--two-col {
-                grid-template-columns: 1fr 1fr;
-                grid-template-rows: auto 1fr;
-            }
-
-            .slide--two-col .slide-header {
-                grid-column: 1 / -1;
-                border-right: none;
-                border-bottom: 3px solid transparent;
-                border-image: var(--gradient-secondary) 1;
-                padding-right: 0;
-                padding-bottom: var(--space-md);
-                height: auto;
-            }
-
-            .card-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .slide {
-                padding: var(--space-lg) var(--space-md);
-            }
-
-            .slide--split {
-                grid-template-columns: 1fr;
-                grid-template-rows: 1fr 1fr;
-            }
-
-            .slide--split .slide-right::before {
-                display: none;
-            }
-
-            .card-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .slide-dots {
-                display: none;
-            }
-
-            .nav-controls {
-                bottom: var(--space-sm);
-            }
-        }
-
-        /* ========================================
-           ANIMATIONS - GPU accelerated
-           ======================================== */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translate3d(0, 24px, 0);
-            }
-            to {
-                opacity: 1;
-                transform: translate3d(0, 0, 0);
-            }
-        }
-
-        .slide .slide-title,
-        .slide .accent-line,
-        .slide .slide-subtitle,
-        .slide .slide-content,
-        .slide .slide-header,
-        .slide .slide-main,
-        .slide .col {
-            will-change: transform, opacity;
-            backface-visibility: hidden;
-        }
-
-        .slide.active .slide-header {
-            animation: fadeInUp 0.35s ease-out backwards;
-        }
-
-        .slide.active .slide-main {
-            animation: fadeInUp 0.35s ease-out 0.1s backwards;
-        }
-
-        .slide.active .slide-title {
-            animation: fadeInUp 0.35s ease-out backwards;
-        }
-
-        .slide.active .accent-line {
-            animation: fadeInUp 0.35s ease-out 0.05s backwards;
-        }
-
-        .slide.active .slide-subtitle {
-            animation: fadeInUp 0.35s ease-out 0.1s backwards;
-        }
-
-        .slide.active .slide-content {
-            animation: fadeInUp 0.35s ease-out 0.15s backwards;
-        }
-
-        .slide.active .col {
-            animation: fadeInUp 0.35s ease-out 0.1s backwards;
-        }
-
-        .slide.active .col:nth-child(3) {
-            animation-delay: 0.15s;
-        }
-
-        /* ========================================
-           PRINT STYLES
-           ======================================== */
-        @media print {
-            /* Force landscape and proper page sizing */
-            @page {
-                size: landscape;
-                margin: 0;
-            }
-
-            /* Reset body for print */
-            html, body {
-                width: 100%;
-                height: auto;
-                overflow: visible;
-                background: white;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            /* Presentation container reset */
-            .presentation {
-                width: auto;
-                height: auto;
-                overflow: visible;
-                position: static;
-            }
-
-            /* Hide navigation elements */
-            .progress-bar,
-            .nav-controls,
-            .slide-dots {
-                display: none !important;
-            }
-
-            /* Show all slides, one per page */
-            .slide {
-                position: relative !important;
-                opacity: 1 !important;
-                visibility: visible !important;
-                transform: none !important;
-                width: 100vw;
-                height: 100vh;
-                page-break-after: always;
-                page-break-inside: avoid;
-                break-after: page;
-                break-inside: avoid;
-                display: flex !important;
-                background: var(--bg-primary) !important;
-            }
-
-            /* Hide dot grid for print */
-            .slide::before,
-            .slide::after {
-                display: none !important;
-            }
-
-            /* Last slide shouldn't have page break after */
-            .slide:last-of-type {
-                page-break-after: auto;
-                break-after: auto;
-            }
-
-            /* Remove animations */
-            .slide * {
-                animation: none !important;
-                transition: none !important;
-            }
-
-            /* Ensure split layouts work in print */
-            .slide--split {
-                flex-direction: row !important;
-            }
-
-            .slide--split .slide-left,
-            .slide--split .slide-right {
-                flex: 1 !important;
-                height: auto !important;
-            }
-
-            /* Two column layout for print */
-            .slide--two-col .slide-body {
-                grid-template-columns: 1fr 1fr !important;
-            }
-
-            /* Adjust typography for print */
-            .slide-title {
-                font-size: 3rem !important;
-            }
-
-            .slide--title .slide-title {
-                font-size: 3.5rem !important;
-            }
-
-            .slide-subtitle {
-                font-size: 1.5rem !important;
-            }
-
-            .slide-content {
-                font-size: 1.25rem !important;
-            }
-
-            /* Ensure accent line prints correctly */
-            .accent-line::before {
-                background: var(--accent) !important;
-            }
-
-            .accent-line::after {
-                background: var(--accent-light) !important;
-            }
-
-            .card {
-                box-shadow: none !important;
-                border: 1px solid var(--border) !important;
-            }
-
-            /* Adjust slide metadata for print */
-            .slide-meta,
-            .slide-number {
-                position: absolute;
-                bottom: 1.5rem;
-            }
-
-            .slide-meta {
-                left: 3rem;
-            }
-
-            .slide-number {
-                right: 3rem;
-            }
-
-            /* Placeholder elements for print */
-            .placeholder-image,
-            .placeholder-chart {
-                border: 2px dashed var(--border) !important;
-            }
-
-            /* Ensure quote styling prints well */
-            .quote {
-                border-left: 3px solid var(--accent) !important;
-            }
-        }
-    </style>
+    <title>SOLAS · Defesa de TCC</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
     <div class="presentation">
@@ -1062,261 +17,477 @@
         <section class="slide slide--title active" data-slide="1">
             <div class="accent-line"></div>
             <h1 class="slide-title">Ferramenta baseada em LLMs para acompanhar aulas em idiomas que o usuário não entende</h1>
-            <p class="slide-subtitle">SOLAS: Um Pipeline de Código Aberto</p>
+            <p class="slide-subtitle">SOLAS: Self-hosted Open-source Lecture Assistant System</p>
             <div class="slide-content">
                 <p>André Florencio Carini</p>
                 <p style="color: var(--text-muted);">Orientador: Prof. Dr. André Inacio Reis</p>
-                <p style="color: var(--text-muted);">UFRGS — Instituto de Informática — Novembro 2025</p>
+                <p style="color: var(--text-muted);">UFRGS · Instituto de Informática · Dezembro 2025</p>
             </div>
-            <span class="slide-number">01</span>
+            <span class="slide-number"></span>
         </section>
 
         <!-- Slide 2: Agenda -->
         <section class="slide slide--standard" data-slide="2">
             <div class="slide-header">
                 <div class="accent-line"></div>
-                <h2 class="slide-title">Agenda</h2>
-                <p class="slide-subtitle">O que veremos hoje</p>
+                <h2 class="slide-title">Conteúdo</h2>
             </div>
             <div class="slide-main">
                 <div class="slide-content">
                     <ol>
-                        <li><strong>O Problema</strong> — Barreira linguística na educação</li>
-                        <li><strong>A Solução</strong> — Pipeline SOLAS</li>
-                        <li><strong>Tecnologias</strong> — ASR, LLMs e TTS</li>
-                        <li><strong>Resultados</strong> — Avaliação e tradeoffs</li>
-                        <li><strong>Conclusões</strong> — Contribuições e trabalhos futuros</li>
+                        <li><strong>Motivação</strong> · Barreira linguística na educação online</li>
+                        <li><strong>Trabalhos Relacionados</strong> · Soluções existentes e limitações</li>
+                        <li><strong>Fundamentos</strong> · Transformers, ASR, LLMs, TTS</li>
+                        <li><strong>Proposta</strong> · Pipeline SOLAS</li>
+                        <li><strong>Resultados</strong> · Experimentos e análise empírica</li>
+                        <li><strong>Conclusão</strong> · Contribuições e trabalhos futuros</li>
                     </ol>
                 </div>
             </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">02</span>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
         </section>
 
-        <!-- Slide 3: O Problema - Cenário -->
+        <!-- Slide 3: O Desafio - Barreira Linguística -->
         <section class="slide slide--standard" data-slide="3">
             <div class="slide-header">
                 <div class="accent-line"></div>
-                <h2 class="slide-title">O Problema</h2>
-                <p class="slide-subtitle">Um cenário comum</p>
+                <h2 class="slide-title">Motivação</h2>
+                <p class="slide-subtitle">Barreira linguística na educação online</p>
             </div>
             <div class="slide-main">
                 <div class="slide-content">
-                    <p>Imagine um estudante que precisa assistir uma aula em um idioma que não domina completamente...</p>
-                    <p>O melhor conteúdo educacional muitas vezes está disponível apenas em certos idiomas — inglês, alemão, mandarim.</p>
-                    <p>Como acessar esse conhecimento sem dominar o idioma?</p>
+                    <p><span class="highlight">85% dos cursos online</span> em plataformas como Coursera e edX são ministrados em inglês <span class="cite">Class Central, 2025</span></p>
+                    <p style="margin-top: var(--space-sm);"><strong>Problema:</strong> Estudantes não-fluentes enfrentam uma tarefa cognitiva dupla:</p>
+                    <ul>
+                        <li>Processar um idioma estrangeiro</li>
+                        <li>Compreender conteúdo técnico complexo simultaneamente</li>
+                    </ul>
+                    <p style="margin-top: var(--space-sm);">Essa sobrecarga cognitiva prejudica a retenção do conhecimento <span class="cite">Roussel, 2022</span></p>
                 </div>
             </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">03</span>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
         </section>
 
-        <!-- Slide 4: O Problema - Carga Cognitiva -->
+        <!-- Slide 4: NotebookLM -->
         <section class="slide slide--standard" data-slide="4">
             <div class="slide-header">
                 <div class="accent-line"></div>
-                <h2 class="slide-title">Carga Cognitiva</h2>
-                <p class="slide-subtitle">O desafio duplo</p>
+                <h2 class="slide-title">Trabalhos Relacionados</h2>
+                <p class="slide-subtitle">NotebookLM</p>
             </div>
             <div class="slide-main">
                 <div class="slide-content">
-                    <p>O estudante enfrenta <span class="highlight">duas tarefas simultâneas</span>:</p>
+                    <p><strong>NotebookLM</strong> <span class="cite">Google, 2024</span> · produto comercial mais comparável</p>
                     <ul>
-                        <li>Processar e entender o idioma estrangeiro</li>
-                        <li>Aprender o conteúdo técnico da aula</li>
+                        <li>Upload de documentos e áudio para processamento</li>
+                        <li>Geração de resumos e respostas a perguntas baseadas nos documentos</li>
+                        <li>Funcionalidade "Audio Overview": podcast de 5-15 minutos com dois hosts discutindo o conteúdo de forma natural</li>
                     </ul>
-                    <p>Essa sobrecarga cognitiva prejudica a absorção do conhecimento.</p>
+                    <p style="margin-top: var(--space-sm);">Conversação fluida, com hosts fazendo perguntas entre si e expressando curiosidade</p>
                 </div>
             </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">04</span>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
         </section>
 
-        <!-- Slide 5: Soluções Existentes -->
+        <!-- Slide 5: NotebookLM Limitações -->
         <section class="slide slide--standard" data-slide="5">
             <div class="slide-header">
                 <div class="accent-line"></div>
-                <h2 class="slide-title">Soluções Existentes</h2>
-                <p class="slide-subtitle">O que já existe</p>
+                <h2 class="slide-title">Trabalhos Relacionados</h2>
+                <p class="slide-subtitle">NotebookLM · Limitações</p>
             </div>
             <div class="slide-main">
                 <div class="slide-content">
                     <ul>
-                        <li><span class="tag">NotebookLM</span> (Google) — gera podcasts a partir de documentos</li>
-                        <li>Serviços de transcrição e tradução na nuvem</li>
-                        <li>Legendas automáticas do YouTube</li>
-                        <li>Ferramentas de tradução como Google Translate, DeepL</li>
+                        <li><strong>Privacidade:</strong> exige upload para servidores do Google</li>
+                        <li><strong>Sem execução local:</strong> impossível executar localmente ou em servidores próprios</li>
+                        <li><strong>Políticas de conteúdo:</strong> sujeito a restrições do Google <span class="cite">Qiu et al., 2025</span></li>
+                        <li><strong>Controle limitado:</strong> usuário não escolhe formato de saída ou vozes</li>
+                        <li><strong>Código fechado:</strong> impossível auditar ou reproduzir</li>
                     </ul>
                 </div>
             </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">05</span>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
         </section>
 
-        <!-- Slide 6: Problemas das Soluções -->
+        <!-- Slide 6: Open Notebook -->
         <section class="slide slide--standard" data-slide="6">
             <div class="slide-header">
                 <div class="accent-line"></div>
-                <h2 class="slide-title">Limitações</h2>
-                <p class="slide-subtitle">Por que não são ideais</p>
+                <h2 class="slide-title">Trabalhos Relacionados</h2>
+                <p class="slide-subtitle">Open Notebook</p>
             </div>
             <div class="slide-main">
                 <div class="slide-content">
+                    <p><strong>Open Notebook</strong> <span class="cite">GitHub, 2024</span> · alternativa open-source</p>
                     <ul>
-                        <li><strong>Dependência de cloud</strong> — necessidade de conexão à internet</li>
-                        <li><strong>Privacidade</strong> — dados enviados para servidores externos</li>
-                        <li><strong>Custos recorrentes</strong> — assinaturas ou limites de uso</li>
-                        <li><strong>Código fechado</strong> — impossível auditar ou modificar</li>
+                        <li>Funcionalidades similares ao NotebookLM: chat com documentos, sumarização, geração de podcast</li>
+                        <li>Funciona com modelos comerciais via API ou com modelos de pesos públicos instalados localmente</li>
+                        <li>Projeto ativamente mantido, código aberto</li>
                     </ul>
                 </div>
             </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">06</span>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
         </section>
 
-        <!-- Slide 7: SOLAS - Nossa Proposta -->
-        <section class="slide slide--title" data-slide="7">
-            <div class="accent-line"></div>
-            <h1 class="slide-title">SOLAS</h1>
-            <p class="slide-subtitle">Uma alternativa local e open-source</p>
-            <div class="slide-content">
-                <p>Execução 100% local • Modelos de código aberto • Privacidade garantida</p>
-            </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">07</span>
-        </section>
-
-        <!-- Slide 8: Conceitos - ASR -->
-        <section class="slide slide--split" data-slide="8">
-            <div class="slide-left">
-                <div class="accent-line"></div>
-                <h2 class="slide-title">ASR</h2>
-                <p class="slide-subtitle">Automatic Speech Recognition</p>
-                <div class="slide-content">
-                    <p>Converte <strong>áudio em texto</strong>.</p>
-                    <p>Utilizamos o <span class="tag">Whisper</span> da OpenAI:</p>
-                    <ul>
-                        <li>Suporte multilíngue (99 idiomas)</li>
-                        <li>Três tamanhos: tiny, small, large</li>
-                        <li>Open-weights disponíveis</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="slide-right">
-                <div class="placeholder-image">
-                    Diagrama ASR
-                </div>
-            </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">08</span>
-        </section>
-
-        <!-- Slide 9: Conceitos - LLM -->
-        <section class="slide slide--split" data-slide="9">
-            <div class="slide-left">
-                <div class="accent-line"></div>
-                <h2 class="slide-title">LLMs</h2>
-                <p class="slide-subtitle">Large Language Models</p>
-                <div class="slide-content">
-                    <p>Modelos de linguagem para <strong>processamento de texto</strong>:</p>
-                    <ul>
-                        <li>Tradução para idioma alvo</li>
-                        <li>Geração de resumos</li>
-                        <li>Criação de scripts de podcast</li>
-                    </ul>
-                    <p>Modelos testados: <span class="tag">Mistral-7B</span>, <span class="tag">Qwen2</span>, <span class="tag">Phi-3</span></p>
-                </div>
-            </div>
-            <div class="slide-right">
-                <div class="placeholder-image">
-                    Diagrama LLM
-                </div>
-            </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">09</span>
-        </section>
-
-        <!-- Slide 10: Conceitos - TTS -->
-        <section class="slide slide--split" data-slide="10">
-            <div class="slide-left">
-                <div class="accent-line"></div>
-                <h2 class="slide-title">TTS</h2>
-                <p class="slide-subtitle">Text-to-Speech</p>
-                <div class="slide-content">
-                    <p>Converte <strong>texto em áudio</strong>.</p>
-                    <p>Utilizamos o <span class="tag">XTTS v2</span> da Coqui:</p>
-                    <ul>
-                        <li>Clonagem de voz (zero-shot)</li>
-                        <li>Apenas 6-15 segundos de amostra</li>
-                        <li>Vozes distintas para cada host do podcast</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="slide-right">
-                <div class="placeholder-image">
-                    Diagrama TTS
-                </div>
-            </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">10</span>
-        </section>
-
-        <!-- Slide 11: O Pipeline SOLAS -->
-        <section class="slide slide--split" data-slide="11">
-            <div class="slide-left">
-                <div class="accent-line"></div>
-                <h2 class="slide-title">O Pipeline</h2>
-                <p class="slide-subtitle">Do áudio ao material de estudo</p>
-                <div class="slide-content">
-                    <p><strong>Entrada:</strong> Áudio de uma aula</p>
-                    <p><strong>Saídas:</strong></p>
-                    <ol>
-                        <li>Transcrição (idioma original)</li>
-                        <li>Tradução (idioma alvo)</li>
-                        <li>Resumo em tópicos</li>
-                        <li>Script de podcast</li>
-                        <li>Áudio do podcast</li>
-                    </ol>
-                </div>
-            </div>
-            <div class="slide-right">
-                <div class="placeholder-image">
-                    Diagrama do Pipeline
-                </div>
-            </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">11</span>
-        </section>
-
-        <!-- Slide 12: Stack Tecnológico -->
-        <section class="slide slide--standard" data-slide="12">
+        <!-- Slide 7: Open Notebook Limitações -->
+        <section class="slide slide--standard" data-slide="7">
             <div class="slide-header">
                 <div class="accent-line"></div>
-                <h2 class="slide-title">Stack</h2>
-                <p class="slide-subtitle">Tecnologias utilizadas</p>
+                <h2 class="slide-title">Trabalhos Relacionados</h2>
+                <p class="slide-subtitle">Open Notebook · Limitações</p>
             </div>
             <div class="slide-main">
-                <div class="card-grid">
-                    <div class="card">
-                        <h4 class="card-title">Whisper</h4>
-                        <p class="card-text">ASR — OpenAI<br>tiny (39M), small (244M), large (1.5B)</p>
+                <div class="slide-content">
+                    <ul>
+                        <li><strong>Setup complexo:</strong> requer Docker, configuração de chaves de API ou servidor de modelos local</li>
+                        <li><strong>Maturidade:</strong> ainda em desenvolvimento, não atinge o polish do NotebookLM</li>
+                        <li><strong>Foco no produto:</strong> prioriza experiência do usuário final, não avaliação de modelos</li>
+                    </ul>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 8: Gap Identificado -->
+        <section class="slide slide--standard" data-slide="8">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Gap Identificado</h2>
+                <p class="slide-subtitle">Oportunidade de pesquisa</p>
+            </div>
+            <div class="slide-main">
+                <div class="slide-content">
+                    <p>Nenhuma solução existente foca em <strong>avaliar empiricamente</strong> os compromissos entre modelos de pesos públicos para processamento de aulas.</p>
+                    <p style="margin-top: var(--space-sm);"><strong>Questões em aberto:</strong></p>
+                    <ul>
+                        <li>Qual tamanho mínimo de modelo produz resultados utilizáveis?</li>
+                        <li>Qual o impacto da quantização na qualidade vs tempo de execução?</li>
+                        <li>Quais configurações funcionam em hardware acessível (GPU gratuita)?</li>
+                    </ul>
+                    <p style="margin-top: var(--space-md);"><strong>Este trabalho:</strong> Avaliação sistemática dos compromissos para cada etapa do pipeline usando modelos de pesos públicos.</p>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 9: Fundamentos - Transformers -->
+        <section class="slide slide--split" data-slide="9">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Fundamentos</h2>
+                <p class="slide-subtitle">Arquitetura Transformer</p>
+            </div>
+            <div class="slide-body">
+                <div class="slide-left">
+                    <div class="slide-content">
+                        <p><strong>Transformer</strong> <span class="cite">Vaswani et al., 2017</span></p>
+                        <p style="margin-top: var(--space-sm);">Inovação: <strong>mecanismo de self-attention</strong></p>
+                        <ul>
+                            <li>Cada palavra pondera a importância de todas as outras palavras da sequência</li>
+                            <li>Captura dependências independente da distância</li>
+                            <li>Computações não sequenciais: treinamento paralelo em GPUs</li>
+                        </ul>
+                        <p style="margin-top: var(--space-sm);">Base de todos os modelos usados: Whisper, LLMs, XTTS</p>
                     </div>
-                    <div class="card">
-                        <h4 class="card-title">LLMs</h4>
-                        <p class="card-text">Mistral-7B, Qwen2, Phi-3<br>0.5B a 7B parâmetros</p>
-                    </div>
-                    <div class="card">
-                        <h4 class="card-title">XTTS v2</h4>
-                        <p class="card-text">TTS — Coqui<br>Clonagem de voz zero-shot</p>
+                </div>
+                <div class="slide-right">
+                    <div class="diagram-container" style="max-width: 380px;">
+                        <img src="diagrams/transformers-attention.svg" alt="Transformers Attention" style="width: 100%; height: auto;">
                     </div>
                 </div>
             </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">12</span>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
         </section>
 
-        <!-- Slide 13: Implementação -->
-        <section class="slide slide--standard" data-slide="13">
+        <!-- Slide 10: Open Source vs Open Weights -->
+        <section class="slide slide--split" data-slide="10">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Fundamentos</h2>
+                <p class="slide-subtitle">Open Source vs Open Weights</p>
+            </div>
+            <div class="slide-body">
+                <div class="slide-left">
+                    <div class="slide-content">
+                        <p><strong>Open Source:</strong> código-fonte disponível para inspeção e modificação</p>
+                        <p style="margin-top: var(--space-sm);"><strong>Open Weights:</strong> pesos públicos, mas treinamento omitido <span class="cite">Liesenfeld et al., 2024</span></p>
+                        <ul>
+                            <li>Pesos ≠ código-fonte (análogo a binário)</li>
+                            <li>Dados de treinamento não divulgados</li>
+                            <li>Processo não reprodutível</li>
+                        </ul>
+                        <p style="margin-top: var(--space-sm);">Todos os modelos usados são <strong>open-weight</strong></p>
+                    </div>
+                </div>
+                <div class="slide-right">
+                    <div class="chart-container" style="max-width: 400px;">
+                        <div class="chart-title">Transparência de Treinamento</div>
+                        <img src="diagrams/training-transparency.svg" alt="Training Transparency" style="width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 11: Fundamentos - Chunking -->
+        <section class="slide slide--split" data-slide="11">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Fundamentos</h2>
+                <p class="slide-subtitle">Chunking e Janela de Contexto</p>
+            </div>
+            <div class="slide-body">
+                <div class="slide-left">
+                    <div class="slide-content">
+                        <p><strong>Problema:</strong> Transcrições de aulas podem ter 6.000+ tokens. Muitos modelos têm limite de 4K-8K tokens.</p>
+                        <p style="margin-top: var(--space-sm);"><strong>Solução:</strong> Dividir o texto em segmentos menores</p>
+                        <ul>
+                            <li><strong>Tradução:</strong> traduz cada chunk separadamente e concatena</li>
+                            <li><strong>Sumarização:</strong> abordagem hierárquica <span class="cite">Betrian, 2024</span></li>
+                        </ul>
+                        <p style="margin-top: var(--space-sm);">Sumarização hierárquica: resumir cada chunk, depois resumir os resumos em um resumo final</p>
+                    </div>
+                </div>
+                <div class="slide-right">
+                    <div class="diagram-container" style="max-width: 400px;">
+                        <img src="diagrams/training-flow.svg" alt="Training Flow" style="width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 12: Tecnologias - ASR -->
+        <section class="slide slide--split" data-slide="12">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Fundamentos</h2>
+                <p class="slide-subtitle">ASR · Reconhecimento de Fala</p>
+            </div>
+            <div class="slide-body">
+                <div class="slide-left">
+                    <div class="slide-content">
+                        <p><strong>Whisper</strong> <span class="cite">Radford et al., 2022</span></p>
+                        <p>Modelo encoder-decoder baseado em Transformer, treinado em 680.000 horas de áudio multilíngue.</p>
+                        <ul>
+                            <li>Suporte a 99 idiomas</li>
+                            <li>Três tamanhos avaliados: tiny (39M), small (244M), large (1.5B)</li>
+                            <li>Pesos públicos disponíveis</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="slide-right">
+                    <div class="diagram-container">
+                        <img src="diagrams/asr-pipeline.svg" alt="Asr Pipeline" style="width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 13: Fundamentos - LLM -->
+        <section class="slide slide--split" data-slide="13">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Fundamentos</h2>
+                <p class="slide-subtitle">LLMs · Large Language Models</p>
+            </div>
+            <div class="slide-body">
+                <div class="slide-left">
+                    <div class="slide-content">
+                        <p>Redes neurais baseadas em Transformer <span class="cite">Vaswani et al., 2017</span> treinadas em grandes volumes de texto.</p>
+                        <p style="margin-top: var(--space-sm);"><strong>Modelos avaliados:</strong></p>
+                        <ul>
+                            <li><strong>Qwen2</strong> <span class="cite">Alibaba, 2024</span> · 0.5B, 1.5B parâmetros</li>
+                            <li><strong>Phi-3</strong> <span class="cite">Microsoft, 2024</span> · 3.8B parâmetros</li>
+                            <li><strong>Mistral-7B</strong> <span class="cite">Mistral AI, 2023</span> · 7B parâmetros</li>
+                        </ul>
+                        <p style="margin-top: var(--space-sm);"><strong>Tarefas:</strong> Tradução, sumarização, geração de scripts</p>
+                    </div>
+                </div>
+                <div class="slide-right">
+                    <div class="diagram-container">
+                        <img src="diagrams/llm-summarization.svg" alt="Llm Summarization" style="width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 14: Fundamentos - TTS -->
+        <section class="slide slide--split" data-slide="14">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Fundamentos</h2>
+                <p class="slide-subtitle">TTS · Text-to-Speech</p>
+            </div>
+            <div class="slide-body">
+                <div class="slide-left">
+                    <div class="slide-content">
+                        <p><strong>XTTS v2</strong> <span class="cite">Casanova et al., 2024</span></p>
+                        <p>Pipeline de duas etapas: modelo acústico autoregressivo + vocoder.</p>
+                        <ul>
+                            <li><strong>Zero-shot voice cloning:</strong> clona voz a partir de 6-15s de áudio de referência</li>
+                            <li>Suporte multilíngue (17 idiomas)</li>
+                            <li>Vozes distintas para cada host do podcast</li>
+                        </ul>
+                        <p style="margin-top: var(--space-sm);">Baseado em TorToise <span class="cite">Betker, 2023</span></p>
+                    </div>
+                </div>
+                <div class="slide-right">
+                    <div class="diagram-container">
+                        <img src="diagrams/quantization.svg" alt="Quantization" style="width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 15: Proposta - Pipeline SOLAS -->
+        <section class="slide slide--split" data-slide="15">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Proposta</h2>
+                <p class="slide-subtitle">Pipeline SOLAS</p>
+            </div>
+            <div class="slide-body">
+                <div class="slide-left">
+                    <div class="slide-content">
+                        <p><strong>Entrada:</strong> Áudio de aula em idioma estrangeiro</p>
+                        <p style="margin-top: var(--space-sm);"><strong>Saídas geradas:</strong></p>
+                        <ol>
+                            <li>Transcrição no idioma original</li>
+                            <li>Tradução para idioma alvo</li>
+                            <li>Resumo em bullet points</li>
+                            <li>Script de podcast (2 hosts)</li>
+                            <li>Áudio sintetizado do podcast</li>
+                        </ol>
+                        <p style="margin-top: var(--space-sm);">Execução 100% local, modelos open-weight</p>
+                    </div>
+                </div>
+                <div class="slide-right">
+                    <div class="diagram-container" style="max-width: 400px;">
+                        <img src="diagrams/architecture.svg" alt="Architecture" style="width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 16: Stack Tecnológico -->
+        <section class="slide slide--standard" data-slide="16">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Modelos Avaliados</h2>
+                <p class="slide-subtitle">Pipeline de processamento</p>
+            </div>
+            <div class="slide-main">
+                <div class="stack-sections">
+                    <!-- ASR Section -->
+                    <div class="stack-section">
+                        <h3 class="stack-section-title"><span class="stack-badge asr">ASR</span> Reconhecimento de Fala</h3>
+                        <div class="stack-cards">
+                            <div class="stack-card-detailed">
+                                <div class="model-header">
+                                    <span class="model-name">Whisper tiny</span>
+                                    <span class="model-params">0.04B</span>
+                                </div>
+                                <div class="model-meta">OpenAI</div>
+                                <div class="model-details">Mais rápido, menor precisão</div>
+                            </div>
+                            <div class="stack-card-detailed">
+                                <div class="model-header">
+                                    <span class="model-name">Whisper small</span>
+                                    <span class="model-params">0.24B</span>
+                                </div>
+                                <div class="model-meta">OpenAI</div>
+                                <div class="model-details">Melhor custo-benefício</div>
+                            </div>
+                            <div class="stack-card-detailed">
+                                <div class="model-header">
+                                    <span class="model-name">Whisper large-v3</span>
+                                    <span class="model-params">1.5B</span>
+                                </div>
+                                <div class="model-meta">OpenAI</div>
+                                <div class="model-details">Maior precisão, mais lento</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- LLM Section -->
+                    <div class="stack-section">
+                        <h3 class="stack-section-title"><span class="stack-badge llm">LLM</span> Modelos de Linguagem</h3>
+                        <div class="stack-cards">
+                            <div class="stack-card-detailed">
+                                <div class="model-header">
+                                    <span class="model-name">Mistral-7B</span>
+                                    <span class="model-params">7B</span>
+                                </div>
+                                <div class="model-meta">Mistral AI · 32K contexto</div>
+                                <div class="model-details">Melhor qualidade, suporta 4-bit</div>
+                            </div>
+                            <div class="stack-card-detailed">
+                                <div class="model-header">
+                                    <span class="model-name">Qwen2</span>
+                                    <span class="model-params">0.5B</span>
+                                </div>
+                                <div class="model-meta">Alibaba · 32K contexto</div>
+                                <div class="model-details">Ultra-leve, qualidade limitada</div>
+                            </div>
+                            <div class="stack-card-detailed">
+                                <div class="model-header">
+                                    <span class="model-name">Qwen2</span>
+                                    <span class="model-params">1.5B</span>
+                                </div>
+                                <div class="model-meta">Alibaba · 32K contexto</div>
+                                <div class="model-details">Compacto, bom para resumos</div>
+                            </div>
+                            <div class="stack-card-detailed">
+                                <div class="model-header">
+                                    <span class="model-name">Phi-3 mini</span>
+                                    <span class="model-params">3.8B</span>
+                                </div>
+                                <div class="model-meta">Microsoft · 4K contexto</div>
+                                <div class="model-details">Eficiente, contexto limitado</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- TTS Section -->
+                    <div class="stack-section">
+                        <h3 class="stack-section-title"><span class="stack-badge tts">TTS</span> Síntese de Fala</h3>
+                        <div class="stack-cards">
+                            <div class="stack-card-detailed wide">
+                                <div class="model-header">
+                                    <span class="model-name">XTTS v2</span>
+                                    <span class="model-params">~1.6B</span>
+                                </div>
+                                <div class="model-meta">Coqui · 17 idiomas</div>
+                                <div class="model-details">Zero-shot voice cloning com 6-15s de áudio de referência</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 17: Implementação -->
+        <section class="slide slide--standard" data-slide="17">
             <div class="slide-header">
                 <div class="accent-line"></div>
                 <h2 class="slide-title">Implementação</h2>
@@ -1333,133 +504,379 @@
                     </ul>
                 </div>
             </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">13</span>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
         </section>
 
-        <!-- Slide 14: Metodologia -->
-        <section class="slide slide--standard" data-slide="14">
+        <!-- Slide 16: Metodologia - Abordagem -->
+        <section class="slide slide--standard" data-slide="16">
             <div class="slide-header">
                 <div class="accent-line"></div>
                 <h2 class="slide-title">Metodologia</h2>
-                <p class="slide-subtitle">Como avaliamos o SOLAS</p>
+                <p class="slide-subtitle">Abordagem experimental</p>
             </div>
             <div class="slide-main">
                 <div class="slide-content">
-                    <p><strong>Corpus:</strong> Aula de 30 minutos (Português → Inglês)</p>
-                    <p><strong>Variáveis testadas:</strong></p>
+                    <p><strong>Objetivo:</strong> Avaliar empiricamente os compromissos entre modelos de pesos públicos para cada etapa do pipeline</p>
+                    <p style="margin-top: var(--space-sm);"><strong>Design:</strong> Experimentos variando um parâmetro por vez</p>
                     <ul>
-                        <li>Tamanho do modelo ASR (tiny, small, large)</li>
-                        <li>Tamanho do LLM (0.5B a 7B parâmetros)</li>
-                        <li>Quantização (4-bit NF4 vs precisão total)</li>
+                        <li>Varia um parâmetro por vez, mantendo os demais fixos</li>
+                        <li>Permite isolar o impacto de cada escolha</li>
                     </ul>
-                    <p><strong>Métricas:</strong> Tempo de processamento, uso de VRAM, qualidade subjetiva</p>
+                    <p style="margin-top: var(--space-sm);"><strong>Corpus:</strong> Episódio do FalaINF (podcast sobre computação), 30 minutos, Português</p>
+                    <p><strong>Total:</strong> 21 experimentos em 6 categorias</p>
                 </div>
             </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">14</span>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
         </section>
 
-        <!-- Slide 15: Resultados - ASR -->
-        <section class="slide slide--split" data-slide="15">
-            <div class="slide-left">
+        <!-- Slide 17: Metodologia - Métricas -->
+        <section class="slide slide--standard" data-slide="17">
+            <div class="slide-header">
                 <div class="accent-line"></div>
-                <h2 class="slide-title">Resultados: ASR</h2>
-                <p class="slide-subtitle">Comparação dos modelos Whisper</p>
+                <h2 class="slide-title">Metodologia</h2>
+                <p class="slide-subtitle">Métricas de avaliação</p>
+            </div>
+            <div class="slide-main">
                 <div class="slide-content">
+                    <p><strong>Métricas gerais (todas as etapas):</strong></p>
                     <ul>
-                        <li><strong>Whisper-tiny:</strong> Rápido, mas com artefatos de repetição</li>
-                        <li><strong>Whisper-small:</strong> Melhor custo-benefício — 40% mais rápido que large</li>
-                        <li><strong>Whisper-large:</strong> Melhor qualidade, maior custo computacional</li>
+                        <li><strong>Tempo de processamento:</strong> segundos para completar cada etapa</li>
+                        <li><strong>Pico de VRAM:</strong> memória máxima de GPU (GB)</li>
+                        <li><strong>Contagem de palavras:</strong> volume de output gerado</li>
+                        <li><strong>Diversidade lexical:</strong> palavras únicas / total de palavras</li>
+                        <li><strong>Taxa de repetição:</strong> proporção de n-gramas repetidos</li>
+                        <li><strong>Repetição consecutiva máxima:</strong> maior sequência de padrões repetidos</li>
                     </ul>
+                    <p style="margin-top: var(--space-sm);"><strong>Métricas específicas:</strong> RTF para ASR, bullet points para resumo, linhas de script para podcast</p>
                 </div>
             </div>
-            <div class="slide-right">
-                <div class="placeholder-chart">
-                    Gráfico ASR
-                </div>
-            </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">15</span>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
         </section>
 
-        <!-- Slide 16: Resultados - LLMs -->
-        <section class="slide slide--split" data-slide="16">
-            <div class="slide-left">
-                <div class="accent-line"></div>
-                <h2 class="slide-title">Resultados: LLMs</h2>
-                <p class="slide-subtitle">Impacto do tamanho do modelo</p>
-                <div class="slide-content">
-                    <ul>
-                        <li><strong>0.5B - 1.5B:</strong> Scripts de podcast de baixa qualidade</li>
-                        <li><strong>3.8B (Phi-3):</strong> Qualidade mínima viável</li>
-                        <li><strong>7B:</strong> Qualidade aceitável para uso prático</li>
-                    </ul>
-                    <p>Modelos maiores = melhor qualidade, mais recursos.</p>
-                </div>
-            </div>
-            <div class="slide-right">
-                <div class="placeholder-chart">
-                    Gráfico LLMs
-                </div>
-            </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">16</span>
-        </section>
-
-        <!-- Slide 17: Resultados - Quantização -->
-        <section class="slide slide--split" data-slide="17">
-            <div class="slide-left">
-                <div class="accent-line"></div>
-                <h2 class="slide-title">Resultados: Quantização</h2>
-                <p class="slide-subtitle">O tradeoff memória vs. tempo</p>
-                <div class="slide-content">
-                    <ul>
-                        <li><strong>Economia de VRAM:</strong> 44-68%</li>
-                        <li><strong>Aumento no tempo:</strong> 71-160%</li>
-                        <li>Modelos maiores sofrem menos penalidade</li>
-                        <li>Modelos menores: degradação de qualidade perceptível</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="slide-right">
-                <div class="placeholder-chart">
-                    Gráfico Quantização
-                </div>
-            </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">17</span>
-        </section>
-
-        <!-- Slide 18: Principais Descobertas -->
+        <!-- Slide 18: Resultados - ASR -->
         <section class="slide slide--standard" data-slide="18">
             <div class="slide-header">
                 <div class="accent-line"></div>
-                <h2 class="slide-title">Descobertas</h2>
-                <p class="slide-subtitle">O que aprendemos</p>
+                <h2 class="slide-title">Resultados</h2>
+                <p class="slide-subtitle">ASR: Comparação Whisper (Aula de 30 min em Português)</p>
             </div>
             <div class="slide-main">
-                <div class="card-grid">
-                    <div class="card">
-                        <h4 class="card-title">Execução Local Funciona</h4>
-                        <p class="card-text">GPUs consumer (T4, 16GB) conseguem rodar o pipeline completo.</p>
+                <div class="slide-content">
+                    <table class="data-table" style="font-size: 0.75rem; width: 100%;">
+                        <tr><th style="text-align:left">Métrica</th><th>Whisper Tiny</th><th>Whisper Small</th><th>Whisper Large V3</th></tr>
+                        <tr><td style="text-align:left">Tempo (s)</td><td style="background:#e5e5e5">89.3</td><td style="background:#dcfce7">152.4</td><td style="background:#fecaca">382.1</td></tr>
+                        <tr><td style="text-align:left">RTF</td><td style="background:#e5e5e5">0.05×</td><td style="background:#dcfce7">0.08×</td><td style="background:#fecaca">0.21×</td></tr>
+                        <tr><td style="text-align:left">VRAM (GB)</td><td style="background:#e5e5e5">0.18</td><td style="background:#dcfce7">0.82</td><td style="background:#fecaca">4.25</td></tr>
+                        <tr><td style="text-align:left">Palavras</td><td style="background:#e5e5e5">5,077</td><td>4,741</td><td>4,723</td></tr>
+                        <tr><td style="text-align:left">Sentenças</td><td style="background:#e5e5e5">418</td><td>180</td><td>201</td></tr>
+                        <tr><td style="text-align:left">Diversidade Lexical</td><td style="background:#e5e5e5">31.36%</td><td>31.36%</td><td>30.81%</td></tr>
+                        <tr><td style="text-align:left">Caps Faltando</td><td style="background:#fecaca">225</td><td>10</td><td>10</td></tr>
+                        <tr><td style="text-align:left">Acrônimos</td><td style="background:#e5e5e5">26</td><td>28</td><td style="background:#dcfce7">32</td></tr>
+                        <tr><td style="text-align:left">Pontuação</td><td style="background:#e5e5e5">1,525</td><td>736</td><td>661</td></tr>
+                        <tr><td style="text-align:left">5-gram Repetição</td><td style="background:#fecaca">212×</td><td>2×</td><td>2×</td></tr>
+                        <tr><td style="text-align:left">Rep. Consecutiva</td><td style="background:#fecaca">216×</td><td>--</td><td>--</td></tr>
+                        <tr><td style="text-align:left"><strong>Veredicto</strong></td><td style="background:#fecaca"><strong>FAIL</strong></td><td style="background:#dcfce7"><strong>OK</strong></td><td style="background:#dcfce7"><strong>OK</strong></td></tr>
+                    </table>
+                    <p style="margin-top: var(--space-sm); font-size: 0.85rem;"><strong>Recomendação:</strong> Whisper-small (40% tempo, 19% VRAM do Large, qualidade equivalente)</p>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 19: Resultados - Quantização VRAM/Tempo -->
+        <section class="slide slide--split" data-slide="19">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Resultados</h2>
+                <p class="slide-subtitle">Quantização: VRAM e Tempo</p>
+            </div>
+            <div class="slide-body">
+                <div class="slide-left">
+                    <div class="slide-content">
+                        <p><strong>Técnica:</strong> NF4 4-bit <span class="cite">Dettmers et al., 2023</span></p>
+                        <table class="data-table" style="font-size: 0.75rem; margin-top: var(--space-sm);">
+                            <tr><th></th><th colspan="2">Qwen 0.5B</th><th colspan="2">Qwen 1.5B</th><th colspan="2">Phi-3</th><th colspan="2">Mistral</th></tr>
+                            <tr><th></th><th>FP</th><th>4b</th><th>FP</th><th>4b</th><th>FP</th><th>4b</th><th>FP</th><th>4b</th></tr>
+                            <tr><td>VRAM</td><td>1.0</td><td>0.6</td><td>3.0</td><td>1.2</td><td>8.2</td><td>3.6</td><td>14.1</td><td>4.6</td></tr>
+                            <tr><td>Economia</td><td colspan="2">44%</td><td colspan="2">60%</td><td colspan="2">55%</td><td colspan="2" style="background:#dcfce7">68%</td></tr>
+                            <tr><td>Tempo</td><td>384</td><td>997</td><td>375</td><td>845</td><td>770</td><td>1320</td><td>542</td><td>1025</td></tr>
+                            <tr><td>Penalidade</td><td colspan="2" style="background:#fecaca">+160%</td><td colspan="2" style="background:#fecaca">+126%</td><td colspan="2" style="background:#fef3c7">+71%</td><td colspan="2" style="background:#fef3c7">+89%</td></tr>
+                        </table>
                     </div>
-                    <div class="card">
-                        <h4 class="card-title">Tamanho Importa</h4>
-                        <p class="card-text">Modelos &lt; 3.8B produzem scripts ruins. 7B recomendado.</p>
+                </div>
+                <div class="slide-right" style="display: flex; align-items: center; justify-content: center;">
+                    <div style="width: 100%; max-width: 450px;"><canvas id="chartQuantVRAM"></canvas></div>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 20: Resultados - Quantização Qualidade -->
+        <section class="slide slide--standard" data-slide="20">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Resultados</h2>
+                <p class="slide-subtitle">Quantização: Impacto na Qualidade por Etapa</p>
+            </div>
+            <div class="slide-main">
+                <div class="slide-content">
+                    <table class="data-table" style="font-size: 0.85rem; width: 100%;">
+                        <tr><th></th><th colspan="2">Qwen2-0.5B</th><th colspan="2">Qwen2-1.5B</th><th colspan="2">Phi-3-mini</th><th colspan="2">Mistral-7B</th></tr>
+                        <tr><th>Etapa</th><th>FP</th><th>4b</th><th>FP</th><th>4b</th><th>FP</th><th>4b</th><th>FP</th><th>4b</th></tr>
+                        <tr>
+                            <td><strong>Tradução</strong></td>
+                            <td style="background:#fecaca">FAIL</td><td style="background:#fef3c7">WARN</td>
+                            <td style="background:#dcfce7">OK</td><td style="background:#fecaca">FAIL</td>
+                            <td style="background:#fef3c7">WARN</td><td style="background:#fecaca">FAIL</td>
+                            <td style="background:#dcfce7">OK</td><td style="background:#dcfce7">OK</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Resumo</strong></td>
+                            <td style="background:#dcfce7">OK</td><td style="background:#fef3c7">WARN</td>
+                            <td style="background:#dcfce7">OK</td><td style="background:#dcfce7">OK</td>
+                            <td style="background:#dcfce7">OK</td><td style="background:#dcfce7">OK</td>
+                            <td style="background:#dcfce7">OK</td><td style="background:#dcfce7">OK</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Podcast</strong></td>
+                            <td style="background:#fecaca">FAIL</td><td style="background:#fecaca">FAIL</td>
+                            <td style="background:#fef3c7">WARN</td><td style="background:#fecaca">FAIL</td>
+                            <td style="background:#fecaca">FAIL</td><td style="background:#fecaca">FAIL</td>
+                            <td style="background:#fef3c7">WARN</td><td style="background:#fecaca">FAIL</td>
+                        </tr>
+                    </table>
+                    <p style="margin-top: var(--space-md);"><strong>Conclusões:</strong></p>
+                    <ul>
+                        <li>Mistral-7B: único modelo que mantém qualidade aceitável com quantização</li>
+                        <li>Modelos menores sofrem degradação severa após quantização</li>
+                        <li>Podcast é a etapa mais propensa a falhas (geração mais longa)</li>
+                    </ul>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 21: Resultados - Quantização Métricas Detalhadas -->
+        <section class="slide slide--standard" data-slide="21">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Resultados</h2>
+                <p class="slide-subtitle">Quantização: Métricas Detalhadas por Etapa</p>
+            </div>
+            <div class="slide-main">
+                <div class="slide-content">
+                    <table class="data-table" style="font-size: 0.65rem; width: 100%;">
+                        <tr><th></th><th colspan="2">Qwen2-0.5B</th><th colspan="2">Qwen2-1.5B</th><th colspan="2">Phi-3-mini</th><th colspan="2">Mistral-7B</th></tr>
+                        <tr><th>Métrica</th><th>FP</th><th>4b</th><th>FP</th><th>4b</th><th>FP</th><th>4b</th><th>FP</th><th>4b</th></tr>
+                        <tr><td colspan="9" style="background:#f1f5f9; font-weight:600; text-align:left;">Tradução</td></tr>
+                        <tr><td style="text-align:left">Tempo (s)</td><td>130.8</td><td>249.2</td><td>149.9</td><td>342.6</td><td>266.8</td><td>403.7</td><td>209.8</td><td>389.4</td></tr>
+                        <tr><td style="text-align:left">VRAM (GB)</td><td>0.97</td><td>0.47</td><td>2.94</td><td>1.15</td><td>7.78</td><td>2.77</td><td>13.69</td><td>4.13</td></tr>
+                        <tr><td style="text-align:left">Palavras</td><td>3816</td><td>3652</td><td>3899</td><td>4546</td><td>4519</td><td>4178</td><td>4606</td><td>4508</td></tr>
+                        <tr><td style="text-align:left">Div. Lexical</td><td>33.1%</td><td>37.8%</td><td>31.8%</td><td>27.4%</td><td>36.6%</td><td>35.5%</td><td>29.4%</td><td>30.2%</td></tr>
+                        <tr><td style="text-align:left">5-gram Rep.</td><td style="background:#fecaca">15×</td><td style="background:#fef3c7">4×</td><td>2×</td><td style="background:#fecaca">42×</td><td style="background:#fef3c7">4×</td><td style="background:#fef3c7">6×</td><td>3×</td><td>3×</td></tr>
+                        <tr><td colspan="9" style="background:#f1f5f9; font-weight:600; text-align:left;">Resumo</td></tr>
+                        <tr><td style="text-align:left">Tempo (s)</td><td>65.7</td><td>191.4</td><td>64.5</td><td>117.6</td><td>106.7</td><td>220.8</td><td>110.3</td><td>228.2</td></tr>
+                        <tr><td style="text-align:left">VRAM (GB)</td><td>1.03</td><td>0.58</td><td>3.02</td><td>1.21</td><td>8.15</td><td>3.63</td><td>14.13</td><td>4.57</td></tr>
+                        <tr><td style="text-align:left">Bullet Points</td><td>28</td><td>72</td><td>20</td><td>30</td><td>18</td><td>23</td><td>6</td><td>17</td></tr>
+                        <tr><td style="text-align:left">Div. Lexical</td><td>45.1%</td><td>31.2%</td><td>51.3%</td><td>50.1%</td><td>58.6%</td><td>55.2%</td><td>57.5%</td><td>56.0%</td></tr>
+                        <tr><td style="text-align:left">5-gram Rep.</td><td>2×</td><td style="background:#fef3c7">6×</td><td>2×</td><td>3×</td><td>2×</td><td>2×</td><td>1×</td><td>2×</td></tr>
+                        <tr><td colspan="9" style="background:#f1f5f9; font-weight:600; text-align:left;">Podcast</td></tr>
+                        <tr><td style="text-align:left">Tempo (s)</td><td>187.7</td><td>556.7</td><td>160.1</td><td>384.5</td><td>396.7</td><td>695.3</td><td>222.1</td><td>407.4</td></tr>
+                        <tr><td style="text-align:left">VRAM (GB)</td><td>1.01</td><td>0.50</td><td>2.99</td><td>1.19</td><td>7.90</td><td>2.91</td><td>13.78</td><td>4.21</td></tr>
+                        <tr><td style="text-align:left">Linhas Script</td><td>46</td><td>195</td><td>119</td><td>167</td><td>187</td><td>131</td><td>97</td><td>99</td></tr>
+                        <tr><td style="text-align:left">Div. Lexical</td><td>9.3%</td><td>7.7%</td><td>28.4%</td><td>24.9%</td><td>21.6%</td><td>22.5%</td><td>28.0%</td><td>29.1%</td></tr>
+                        <tr><td style="text-align:left">5-gram Rep.</td><td style="background:#fecaca">275×</td><td style="background:#fecaca">96×</td><td style="background:#fef3c7">4×</td><td style="background:#fecaca">12×</td><td style="background:#fecaca">11×</td><td style="background:#fecaca">7×</td><td style="background:#fef3c7">6×</td><td style="background:#fecaca">12×</td></tr>
+                    </table>
+                    <p style="margin-top: var(--space-xs); font-size: 0.7rem; color: var(--text-muted);">FP = Full Precision, 4b = 4-bit NF4. Limiares 5-gram: >3 WARN, >6 FAIL</p>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 22: Resultados - Repetition Penalty -->
+        <section class="slide slide--standard" data-slide="22">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Resultados</h2>
+                <p class="slide-subtitle">Repetition Penalty (Qwen2-0.5B vs Mistral-7B, 4-bit)</p>
+            </div>
+            <div class="slide-main">
+                <div class="slide-content">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg);">
+                        <div>
+                            <p style="font-weight: 600; margin-bottom: var(--space-sm);">Qualidade por Etapa</p>
+                            <table class="data-table" style="font-size: 0.75rem;">
+                                <tr><th></th><th colspan="2">Qwen2-0.5B</th><th colspan="2">Mistral-7B</th></tr>
+                                <tr><th>Etapa</th><th>None</th><th>1.2</th><th>None</th><th>1.2</th></tr>
+                                <tr><td style="text-align:left">Tradução</td><td style="background:#fef3c7">WARN</td><td style="background:#fef3c7">WARN</td><td style="background:#dcfce7">OK</td><td style="background:#dcfce7">OK</td></tr>
+                                <tr><td style="text-align:left">Resumo</td><td style="background:#fef3c7">WARN</td><td style="background:#fecaca">FAIL*</td><td style="background:#dcfce7">OK</td><td style="background:#dcfce7">OK</td></tr>
+                                <tr><td style="text-align:left">Podcast</td><td style="background:#fecaca">FAIL</td><td style="background:#fecaca">FAIL*</td><td style="background:#fecaca">FAIL</td><td style="background:#fecaca">FAIL</td></tr>
+                            </table>
+                            <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: var(--space-xs);">* = incoerente em vez de repetitivo</p>
+                        </div>
+                        <div>
+                            <p style="font-weight: 600; margin-bottom: var(--space-sm);">Métricas Podcast</p>
+                            <table class="data-table" style="font-size: 0.75rem;">
+                                <tr><th></th><th colspan="2">Qwen2-0.5B</th><th colspan="2">Mistral-7B</th></tr>
+                                <tr><th>Métrica</th><th>None</th><th>1.2</th><th>None</th><th>1.2</th></tr>
+                                <tr><td style="text-align:left">Tempo (s)</td><td>555</td><td>387</td><td>407</td><td>394</td></tr>
+                                <tr><td style="text-align:left">Palavras</td><td>9449</td><td>6085</td><td>4318</td><td>4058</td></tr>
+                                <tr><td style="text-align:left">Div. Lexical</td><td>7.7%</td><td style="background:#dcfce7">36.1%</td><td>29.1%</td><td style="background:#dcfce7">39.5%</td></tr>
+                                <tr><td style="text-align:left">5-gram Rep.</td><td style="background:#fecaca">96×</td><td style="background:#fecaca">8×</td><td style="background:#fecaca">12×</td><td style="background:#fecaca">9×</td></tr>
+                            </table>
+                        </div>
                     </div>
-                    <div class="card">
-                        <h4 class="card-title">Quantização Viável</h4>
-                        <p class="card-text">Tradeoff aceitável para ambientes com pouca VRAM.</p>
+                    <p style="margin-top: var(--space-md);"><strong>Conclusão:</strong> Penalidade ajuda Mistral (diversidade 29%→40%) mas desestabiliza Qwen (mistura PT/EN)</p>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 23: Resultados - Summary Mode -->
+        <section class="slide slide--split" data-slide="23">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Resultados</h2>
+                <p class="slide-subtitle">Summary Mode: Greedy vs Sampled (Phi-3-mini, Full Precision)</p>
+            </div>
+            <div class="slide-body">
+                <div class="slide-left">
+                    <div class="slide-content">
+                        <table class="data-table" style="font-size: 0.8rem;">
+                            <tr><th style="text-align:left">Métrica</th><th>Greedy</th><th>Sampled</th></tr>
+                            <tr><td style="text-align:left">Tempo (s)</td><td>108.0</td><td>109.9</td></tr>
+                            <tr><td style="text-align:left">VRAM (GB)</td><td>8.15</td><td>8.14</td></tr>
+                            <tr><td style="text-align:left">Palavras</td><td>348</td><td>343</td></tr>
+                            <tr><td style="text-align:left">Div. Lexical</td><td>58.6%</td><td style="background:#dcfce7">61.5%</td></tr>
+                            <tr><td style="text-align:left">5-gram Rep.</td><td>2×</td><td>2×</td></tr>
+                            <tr><td style="text-align:left"><strong>Veredicto</strong></td><td style="background:#dcfce7"><strong>OK</strong></td><td style="background:#dcfce7"><strong>OK</strong></td></tr>
+                        </table>
+                        <p style="margin-top: var(--space-md);"><strong>Conclusão:</strong> Diferença mínima. Sampled levemente mais diverso e engajante.</p>
+                    </div>
+                </div>
+                <div class="slide-right">
+                    <div class="slide-content" style="padding: var(--space-lg);">
+                        <p style="font-weight: 600; margin-bottom: var(--space-sm);">Parâmetros:</p>
+                        <ul style="font-size: 0.85rem;">
+                            <li><strong>Greedy:</strong> do_sample=False (determinístico)</li>
+                            <li><strong>Sampled:</strong> do_sample=True, temp=0.2, top_p=0.9</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">18</span>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
         </section>
 
-        <!-- Slide 19: Limitações -->
-        <section class="slide slide--standard" data-slide="19">
+        <!-- Slide 24: Resultados - Chunk Size -->
+        <section class="slide slide--standard" data-slide="24">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Resultados</h2>
+                <p class="slide-subtitle">Chunk Size: 2000 vs 4000 tokens (Phi-3-mini, Full Precision)</p>
+            </div>
+            <div class="slide-main">
+                <div class="slide-content">
+                    <table class="data-table" style="font-size: 0.75rem; width: 100%;">
+                        <tr><th style="text-align:left">Métrica</th><th>Chunk 2000</th><th>Chunk 4000</th></tr>
+                        <tr><td colspan="3" style="background:#f1f5f9; font-weight:600; text-align:left;">Tradução</td></tr>
+                        <tr><td style="text-align:left">Tempo (s)</td><td style="background:#dcfce7">269.0</td><td style="background:#fef3c7">377.4</td></tr>
+                        <tr><td style="text-align:left">Palavras</td><td>4,519</td><td>5,258</td></tr>
+                        <tr><td style="text-align:left">Div. Lexical</td><td style="background:#dcfce7">36.6%</td><td>31.0%</td></tr>
+                        <tr><td style="text-align:left">5-gram Rep.</td><td style="background:#fef3c7">4×</td><td style="background:#fecaca">8×</td></tr>
+                        <tr><td style="text-align:left"><strong>Veredicto</strong></td><td style="background:#fef3c7"><strong>WARN</strong></td><td style="background:#fecaca"><strong>FAIL</strong></td></tr>
+                        <tr><td colspan="3" style="background:#f1f5f9; font-weight:600; text-align:left;">Resumo</td></tr>
+                        <tr><td style="text-align:left">Tempo (s)</td><td style="background:#dcfce7">108.0</td><td>147.0</td></tr>
+                        <tr><td style="text-align:left">Palavras</td><td>348</td><td>339</td></tr>
+                        <tr><td style="text-align:left">Div. Lexical</td><td style="background:#dcfce7">58.6%</td><td>51.6%</td></tr>
+                        <tr><td style="text-align:left">5-gram Rep.</td><td>2×</td><td>2×</td></tr>
+                        <tr><td style="text-align:left"><strong>Veredicto</strong></td><td style="background:#dcfce7"><strong>OK</strong></td><td style="background:#dcfce7"><strong>OK</strong></td></tr>
+                        <tr><td colspan="3" style="background:#f1f5f9; font-weight:600; text-align:left;">Podcast</td></tr>
+                        <tr><td style="text-align:left">Tempo (s)</td><td>459.9</td><td style="background:#dcfce7">337.4</td></tr>
+                        <tr><td style="text-align:left">Palavras</td><td>8,017</td><td>5,554</td></tr>
+                        <tr><td style="text-align:left">Div. Lexical</td><td>21.2%</td><td style="background:#dcfce7">22.1%</td></tr>
+                        <tr><td style="text-align:left">5-gram Rep.</td><td>9×*</td><td style="background:#fecaca">9×</td></tr>
+                        <tr><td style="text-align:left"><strong>Veredicto</strong></td><td style="background:#dcfce7"><strong>OK*</strong></td><td style="background:#fecaca"><strong>FAIL</strong></td></tr>
+                        <tr><td colspan="3" style="background:#f1f5f9; font-weight:600; text-align:left;">Total</td></tr>
+                        <tr><td style="text-align:left">Tempo (s)</td><td style="background:#dcfce7">836.9</td><td>861.8</td></tr>
+                        <tr><td style="text-align:left">VRAM (GB)</td><td style="background:#dcfce7">8.15</td><td>8.62</td></tr>
+                    </table>
+                    <p style="margin-top: var(--space-xs); font-size: 0.7rem; color: var(--text-muted);">* = falso positivo (termo repetido do domínio). Chunk 4000 excede janela de contexto de 4K do Phi-3.</p>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 25: Resultados - Temperature -->
+        <section class="slide slide--split" data-slide="25">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Resultados</h2>
+                <p class="slide-subtitle">Temperatura: 0.2 vs 0.5 (Mistral-7B 4-bit, Podcast)</p>
+            </div>
+            <div class="slide-body">
+                <div class="slide-left">
+                    <div class="slide-content">
+                        <table class="data-table" style="font-size: 0.8rem;">
+                            <tr><th style="text-align:left">Métrica</th><th>Temp 0.2</th><th>Temp 0.5</th></tr>
+                            <tr><td style="text-align:left">Tempo (s)</td><td>406.5</td><td>421.3</td></tr>
+                            <tr><td style="text-align:left">VRAM (GB)</td><td>4.21</td><td>4.21</td></tr>
+                            <tr><td style="text-align:left">Linhas</td><td>99</td><td>103</td></tr>
+                            <tr><td style="text-align:left">Palavras</td><td>4,318</td><td>4,272</td></tr>
+                            <tr><td style="text-align:left">Div. Lexical</td><td>29.1%</td><td>29.6%</td></tr>
+                            <tr><td style="text-align:left">5-gram Rep.</td><td style="background:#fecaca">12×</td><td style="background:#fef3c7">5×</td></tr>
+                            <tr><td style="text-align:left"><strong>Veredicto</strong></td><td style="background:#fecaca"><strong>FAIL</strong></td><td style="background:#fef3c7"><strong>WARN</strong></td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="slide-right">
+                    <div class="slide-content" style="padding: var(--space-lg);">
+                        <p style="font-weight: 600; margin-bottom: var(--space-sm);">Observações:</p>
+                        <ul style="font-size: 0.85rem;">
+                            <li><strong>Temp 0.2:</strong> Repetição de frases de fechamento ("stay safe online!") devido à geração por chunks</li>
+                            <li><strong>Temp 0.5:</strong> Mais variedade entre chunks, evita convergência para mesma frase</li>
+                        </ul>
+                        <p style="margin-top: var(--space-md);"><strong>Conclusão:</strong> Temperatura maior produz diálogo mais engajante e evita artefatos de chunking.</p>
+                    </div>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 22: Discussão -->
+        <section class="slide slide--standard" data-slide="21">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Discussão</h2>
+                <p class="slide-subtitle">Principais achados</p>
+            </div>
+            <div class="slide-main">
+                <div class="slide-content">
+                    <ul>
+                        <li><strong>Viabilidade da execução local:</strong> Todo o pipeline roda em GPU de 16GB VRAM (T4 do Google Colab gratuito)</li>
+                        <li><strong>Tamanho do modelo é crítico:</strong> LLMs &lt;3.8B parâmetros produzem output degenerado para tarefas longas (podcast). Mistral-7B apresentou melhor relação qualidade/custo</li>
+                        <li><strong>Quantização 4-bit:</strong> Viável apenas para modelos ≥7B. Modelos menores sofrem degradação severa de qualidade</li>
+                        <li><strong>Whisper-small:</strong> Oferece melhor custo-benefício (40% do tempo, 19% da VRAM do large-v3)</li>
+                        <li><strong>Geração de podcast:</strong> Etapa mais desafiadora, mais propensa a degeneração por ser a tarefa mais longa</li>
+                    </ul>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
+        </section>
+
+        <!-- Slide 22: Limitações -->
+        <section class="slide slide--standard" data-slide="22">
             <div class="slide-header">
                 <div class="accent-line"></div>
                 <h2 class="slide-title">Limitações</h2>
@@ -1468,71 +885,72 @@
             <div class="slide-main">
                 <div class="slide-content">
                     <ul>
-                        <li>Testado em um único par de idiomas (PT → EN)</li>
-                        <li>Uma única aula de 30 minutos como corpus</li>
-                        <li>Sem estudos com usuários reais</li>
-                        <li>Protótipo de pesquisa, não produto final</li>
-                        <li>Tempo de processamento: 10-30 min por aula</li>
+                        <li><strong>Corpus único:</strong> Uma aula de 30 minutos em Português</li>
+                        <li><strong>Par de idiomas único:</strong> Apenas PT → EN testado</li>
+                        <li><strong>Sem validação com usuários:</strong> Avaliação empírica, não estudos formais de eficácia educacional</li>
+                        <li><strong>Restrições práticas:</strong> Design fatorial completo exigiria centenas de experimentos, inviável pelos limites de sessão das GPUs gratuitas</li>
+                        <li><strong>Tempo de processamento:</strong> 10-30 minutos por experimento na GPU T4</li>
                     </ul>
                 </div>
             </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">19</span>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
         </section>
 
-        <!-- Slide 20: Conclusões -->
-        <section class="slide slide--standard" data-slide="20">
+        <!-- Slide 23: Conclusão -->
+        <section class="slide slide--standard" data-slide="23">
             <div class="slide-header">
                 <div class="accent-line"></div>
-                <h2 class="slide-title">Conclusões</h2>
-                <p class="slide-subtitle">Contribuições</p>
+                <h2 class="slide-title">Conclusão</h2>
+                <p class="slide-subtitle">Contribuições deste trabalho</p>
             </div>
             <div class="slide-main">
                 <div class="slide-content">
-                    <p><strong>Viabilidade demonstrada:</strong> Modelos open-weight conseguem produzir materiais de estudo úteis em execução local.</p>
-                    <p><strong>Contribuições:</strong></p>
-                    <ul>
-                        <li>Pipeline funcional (SOLAS)</li>
-                        <li>Framework de avaliação reprodutível</li>
-                        <li>Dados empíricos sobre tradeoffs</li>
-                    </ul>
+                    <p>Este trabalho demonstrou a <strong>viabilidade</strong> de um pipeline completo para processamento de aulas usando modelos de pesos públicos em execução local.</p>
+                    <p style="margin-top: var(--space-sm);"><strong>Contribuições:</strong></p>
+                    <ol>
+                        <li><strong>Pipeline funcional (SOLAS):</strong> Sistema que transforma áudio de aula em transcrição, tradução, resumo e podcast</li>
+                        <li><strong>Framework de avaliação:</strong> Infraestrutura reprodutível para benchmarking de modelos open-weight</li>
+                        <li><strong>Análise empírica:</strong> Comparação sistemática dos compromissos entre qualidade, tempo e recursos computacionais</li>
+                    </ol>
+                    <p style="margin-top: var(--space-sm);">Código disponível em: <span style="font-family: var(--font-mono);">github.com/andrecarini/SOLAS</span></p>
                 </div>
             </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">20</span>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
         </section>
 
-        <!-- Slide 21: Trabalhos Futuros -->
-        <section class="slide slide--standard" data-slide="21">
+        <!-- Slide 24: Trabalhos Futuros -->
+        <section class="slide slide--standard" data-slide="24">
             <div class="slide-header">
                 <div class="accent-line"></div>
                 <h2 class="slide-title">Trabalhos Futuros</h2>
-                <p class="slide-subtitle">Próximos passos</p>
+                <p class="slide-subtitle">Direções para pesquisa futura</p>
             </div>
             <div class="slide-main">
                 <div class="slide-content">
                     <ul>
-                        <li>Estudos com usuários para validar eficácia educacional</li>
-                        <li>Suporte a mais pares de idiomas</li>
-                        <li>Otimização para processamento em tempo real</li>
-                        <li>Interface gráfica para usuários não-técnicos</li>
-                        <li>Integração com plataformas de ensino</li>
+                        <li><strong>Validação com usuários:</strong> Estudos formais para avaliar eficácia educacional dos materiais gerados</li>
+                        <li><strong>Avaliação ampliada:</strong> Testes com múltiplos pares de idiomas e diferentes tipos de aulas</li>
+                        <li><strong>Fine-tuning:</strong> Modelos especializados para tradução acadêmica e geração de diálogos educacionais</li>
+                        <li><strong>Otimização de prompts:</strong> Estratégias para reduzir degeneração em geração longa (chunking, deduplicação)</li>
+                        <li><strong>Deployment móvel:</strong> Otimização para execução em dispositivos com recursos limitados</li>
                     </ul>
                 </div>
             </div>
-            <span class="slide-meta">SOLAS — Defesa de TCC</span>
-            <span class="slide-number">21</span>
+            <span class="slide-meta">SOLAS · Defesa de TCC</span>
+            <span class="slide-number"></span>
         </section>
 
-        <!-- Slide 22: Obrigado -->
-        <section class="slide slide--title" data-slide="22">
+        <!-- Slide 25: Obrigado -->
+        <section class="slide slide--title" data-slide="25">
             <div class="accent-line"></div>
             <h1 class="slide-title">Obrigado!</h1>
             <p class="slide-subtitle">Perguntas?</p>
             <div class="slide-content">
                 <p style="font-family: var(--font-mono); color: var(--accent);">github.com/andrecarini/SOLAS</p>
             </div>
-            <span class="slide-number">22</span>
+            <span class="slide-number"></span>
         </section>
 
         <!-- Slide Dots Navigation -->
@@ -1545,7 +963,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
             </button>
-            <span class="slide-counter" id="slideCounter">1 / 22</span>
+            <span class="slide-counter" id="slideCounter">1 / 27</span>
             <button class="nav-btn" id="nextBtn" aria-label="Next slide">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -1553,193 +971,5 @@
             </button>
         </nav>
     </div>
-
-    <script>
-        (function() {
-            'use strict';
-
-            // ========================================
-            // PRESENTATION CONTROLLER
-            // ========================================
-            const presentation = {
-                currentSlide: 1,
-                totalSlides: 0,
-                slides: [],
-                isAnimating: false,
-                scrollAccumulator: 0,
-                scrollThreshold: 50,
-                scrollResetTimer: null,
-
-                init() {
-                    this.slides = document.querySelectorAll('.slide');
-                    this.totalSlides = this.slides.length;
-                    this.createDots();
-                    this.bindEvents();
-                    this.updateUI();
-                },
-
-                createDots() {
-                    const dotsContainer = document.getElementById('slideDots');
-                    for (let i = 1; i <= this.totalSlides; i++) {
-                        const dot = document.createElement('button');
-                        dot.className = 'dot' + (i === 1 ? ' active' : '');
-                        dot.setAttribute('aria-label', `Go to slide ${i}`);
-                        dot.addEventListener('click', () => this.goToSlide(i));
-                        dotsContainer.appendChild(dot);
-                    }
-                },
-
-                bindEvents() {
-                    // Keyboard navigation
-                    document.addEventListener('keydown', (e) => {
-                        if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
-                            e.preventDefault();
-                            this.nextSlide();
-                        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-                            e.preventDefault();
-                            this.prevSlide();
-                        } else if (e.key === 'Home') {
-                            e.preventDefault();
-                            this.goToSlide(1);
-                        } else if (e.key === 'End') {
-                            e.preventDefault();
-                            this.goToSlide(this.totalSlides);
-                        }
-                    });
-
-                    // Mouse wheel navigation with accumulator
-                    document.addEventListener('wheel', (e) => {
-                        if (this.isAnimating) return;
-
-                        // Reset accumulator after 150ms of no scrolling
-                        clearTimeout(this.scrollResetTimer);
-                        this.scrollResetTimer = setTimeout(() => {
-                            this.scrollAccumulator = 0;
-                        }, 150);
-
-                        // Accumulate scroll delta
-                        this.scrollAccumulator += e.deltaY;
-
-                        // Check if we've crossed the threshold
-                        if (Math.abs(this.scrollAccumulator) >= this.scrollThreshold) {
-                            if (this.scrollAccumulator > 0) {
-                                this.nextSlide();
-                            } else {
-                                this.prevSlide();
-                            }
-                            this.scrollAccumulator = 0;
-                        }
-                    }, { passive: true });
-
-                    // Button navigation
-                    document.getElementById('prevBtn').addEventListener('click', () => this.prevSlide());
-                    document.getElementById('nextBtn').addEventListener('click', () => this.nextSlide());
-
-                    // Touch support
-                    let touchStartY = 0;
-                    let touchStartX = 0;
-
-                    document.addEventListener('touchstart', (e) => {
-                        touchStartY = e.touches[0].clientY;
-                        touchStartX = e.touches[0].clientX;
-                    }, { passive: true });
-
-                    document.addEventListener('touchend', (e) => {
-                        const touchEndY = e.changedTouches[0].clientY;
-                        const touchEndX = e.changedTouches[0].clientX;
-                        const diffY = touchStartY - touchEndY;
-                        const diffX = touchStartX - touchEndX;
-
-                        // Horizontal swipe takes priority
-                        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-                            if (diffX > 0) {
-                                this.nextSlide();
-                            } else {
-                                this.prevSlide();
-                            }
-                        } else if (Math.abs(diffY) > 50) {
-                            if (diffY > 0) {
-                                this.nextSlide();
-                            } else {
-                                this.prevSlide();
-                            }
-                        }
-                    }, { passive: true });
-                },
-
-                goToSlide(num) {
-                    if (num < 1 || num > this.totalSlides || num === this.currentSlide || this.isAnimating) {
-                        return;
-                    }
-
-                    this.isAnimating = true;
-                    const direction = num > this.currentSlide ? 1 : -1;
-
-                    // Update slide classes
-                    this.slides.forEach((slide, index) => {
-                        const slideNum = index + 1;
-                        slide.classList.remove('active', 'prev');
-
-                        if (slideNum === num) {
-                            slide.classList.add('active');
-                        } else if (slideNum < num) {
-                            slide.classList.add('prev');
-                        }
-                    });
-
-                    this.currentSlide = num;
-                    this.updateUI();
-
-                    setTimeout(() => {
-                        this.isAnimating = false;
-                    }, 400);
-                },
-
-                nextSlide() {
-                    if (this.currentSlide < this.totalSlides) {
-                        this.goToSlide(this.currentSlide + 1);
-                    }
-                },
-
-                prevSlide() {
-                    if (this.currentSlide > 1) {
-                        this.goToSlide(this.currentSlide - 1);
-                    }
-                },
-
-                updateUI() {
-                    // Update counter
-                    document.getElementById('slideCounter').textContent =
-                        `${this.currentSlide} / ${this.totalSlides}`;
-
-                    // Update progress bar
-                    const progress = ((this.currentSlide - 1) / (this.totalSlides - 1)) * 100;
-                    document.getElementById('progressBar').style.width = `${progress}%`;
-
-                    // Update dots
-                    const dots = document.querySelectorAll('.dot');
-                    dots.forEach((dot, index) => {
-                        dot.classList.toggle('active', index + 1 === this.currentSlide);
-                    });
-
-                    // Update button states
-                    document.getElementById('prevBtn').style.opacity = this.currentSlide === 1 ? '0.3' : '1';
-                    document.getElementById('nextBtn').style.opacity = this.currentSlide === this.totalSlides ? '0.3' : '1';
-
-                    // Toggle dark slide class for frosted glass UI
-                    const currentSlideEl = this.slides[this.currentSlide - 1];
-                    const isDarkSlide = currentSlideEl.classList.contains('slide--title');
-                    document.querySelector('.presentation').classList.toggle('on-dark-slide', isDarkSlide);
-                }
-            };
-
-            // Initialize on DOM ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', () => presentation.init());
-            } else {
-                presentation.init();
-            }
-        })();
-    </script>
 </body>
 </html>
