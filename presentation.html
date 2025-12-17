@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOLAS — Defesa de TCC</title>
+    <style>
+        /* ========================================
+           CSS VARIABLES & RESET
+           ======================================== */
+        :root {
+            /* Vibrant tech palette */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #e2e8f0;
+            --bg-dark: #0f172a;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --accent: #2563eb;
+            --accent-light: #60a5fa;
+            --accent-soft: rgba(37, 99, 235, 0.1);
+            --accent-secondary: #8b5cf6;
+            --accent-tertiary: #06b6d4;
+            --gradient-primary: linear-gradient(135deg, #2563eb 0%, #8b5cf6 100%);
+            --gradient-secondary: linear-gradient(135deg, #06b6d4 0%, #2563eb 100%);
+            --gradient-warm: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+            --border: #cbd5e1;
+            --grid-color: rgba(37, 99, 235, 0.06);
+
+            /* Typography - clean, modern, technical */
+            --font-display: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-mono: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+
+            /* Spacing - tighter for video call readability */
+            --space-xs: 0.4rem;
+            --space-sm: 0.6rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2.5rem;
+
+            /* Transitions */
+            --transition-fast: 0.2s ease;
+            --transition-smooth: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ========================================
+           PRESENTATION CONTAINER
+           ======================================== */
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ========================================
+           SLIDE STYLES
+           ======================================== */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: var(--space-xl) var(--space-xl) calc(var(--space-xl) + 40px);
+            opacity: 0;
+            pointer-events: none;
+            transform: translate3d(0, 20px, 0);
+            transition:
+                opacity 0.4s ease-out,
+                transform 0.4s ease-out;
+            background: var(--bg-primary);
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate3d(0, 0, 0);
+        }
+
+        .slide.prev {
+            transform: translate3d(0, -20px, 0);
+        }
+
+        /* Dot matrix pattern - visible at edges, faded in center */
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: radial-gradient(rgba(37, 99, 235, 0.5) 1.5px, transparent 1.5px);
+            background-size: 20px 20px;
+            pointer-events: none;
+            mask-image: linear-gradient(to right,
+                    rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 3%, rgba(0,0,0,0.1) 10%, transparent 20%,
+                    transparent 65%, rgba(0,0,0,0.2) 80%, rgba(0,0,0,0.6) 92%, rgba(0,0,0,0.9) 100%),
+                linear-gradient(to bottom,
+                    rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 3%, rgba(0,0,0,0.1) 10%, transparent 20%,
+                    transparent 65%, rgba(0,0,0,0.25) 82%, rgba(0,0,0,0.6) 93%, rgba(0,0,0,0.85) 100%);
+            mask-composite: add;
+            -webkit-mask-image: linear-gradient(to right,
+                    rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 3%, rgba(0,0,0,0.1) 10%, transparent 20%,
+                    transparent 65%, rgba(0,0,0,0.2) 80%, rgba(0,0,0,0.6) 92%, rgba(0,0,0,0.9) 100%),
+                linear-gradient(to bottom,
+                    rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 3%, rgba(0,0,0,0.1) 10%, transparent 20%,
+                    transparent 65%, rgba(0,0,0,0.25) 82%, rgba(0,0,0,0.6) 93%, rgba(0,0,0,0.85) 100%);
+            -webkit-mask-composite: source-over;
+        }
+
+        /* Color accent glows at edges */
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                linear-gradient(to right, rgba(37, 99, 235, 0.08) 0%, rgba(37, 99, 235, 0.03) 10%, transparent 25%),
+                linear-gradient(to bottom, rgba(139, 92, 246, 0.06) 0%, rgba(139, 92, 246, 0.02) 8%, transparent 20%),
+                linear-gradient(to left, rgba(6, 182, 212, 0.05) 0%, transparent 15%),
+                linear-gradient(to top, rgba(139, 92, 246, 0.03) 0%, transparent 10%);
+            pointer-events: none;
+        }
+
+
+        /* ========================================
+           TYPOGRAPHY
+           ======================================== */
+        .slide-title {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 6vw, 4.5rem);
+            font-weight: 600;
+            line-height: 1.15;
+            margin-bottom: var(--space-md);
+            color: var(--text-primary);
+            letter-spacing: -0.03em;
+        }
+
+        .slide-subtitle {
+            font-family: var(--font-body);
+            font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+            font-weight: 400;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+        }
+
+        .slide-content {
+            font-size: clamp(1.25rem, 2vw, 1.5rem);
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .slide-content p {
+            margin-bottom: var(--space-sm);
+        }
+
+        .slide-content ul, .slide-content ol {
+            margin-left: var(--space-md);
+            margin-bottom: var(--space-sm);
+        }
+
+        .slide-content li {
+            margin-bottom: var(--space-sm);
+            padding-left: var(--space-xs);
+        }
+
+        .slide-content li::marker {
+            color: var(--accent);
+        }
+
+        /* Accent line decoration - gradient style */
+        .accent-line {
+            display: flex;
+            gap: 4px;
+            margin-bottom: var(--space-sm);
+        }
+
+        .accent-line::before {
+            content: '';
+            width: 40px;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        .accent-line::after {
+            content: '';
+            width: 12px;
+            height: 4px;
+            background: var(--accent-tertiary);
+            border-radius: 2px;
+        }
+
+        /* ========================================
+           SLIDE LAYOUT VARIATIONS
+           ======================================== */
+
+        /* Standard slide - horizontal layout */
+        .slide--standard {
+            display: grid;
+            grid-template-columns: minmax(220px, 320px) 1fr;
+            grid-template-rows: 1fr;
+            gap: var(--space-xl);
+            align-items: center;
+        }
+
+        .slide--standard .slide-header {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-right: 3px solid transparent;
+            border-image: var(--gradient-primary) 1;
+            padding-right: var(--space-lg);
+            height: 60%;
+        }
+
+        .slide--standard .slide-title {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+        }
+
+        .slide--standard .slide-subtitle {
+            font-size: clamp(1rem, 1.8vw, 1.2rem);
+        }
+
+        .slide--standard .slide-main {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Title slide - gradient background */
+        .slide--title {
+            text-align: center;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: var(--space-lg);
+            padding-top: 10vh;
+            padding-bottom: 12vh;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: white;
+        }
+
+        .slide--title::before {
+            background-image: radial-gradient(rgba(96, 165, 250, 0.15) 1.5px, transparent 1.5px);
+            mask-image: none;
+            -webkit-mask-image: none;
+        }
+
+        .slide--title::after {
+            background: radial-gradient(ellipse at 30% 20%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(6, 182, 212, 0.2) 0%, transparent 50%);
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide--title .accent-line {
+            justify-content: center;
+        }
+
+        .slide--title .accent-line::before {
+            background: var(--gradient-primary);
+        }
+
+        .slide--title .accent-line::after {
+            background: var(--accent-tertiary);
+        }
+
+        .slide--title .slide-title {
+            font-size: clamp(2.4rem, 4.5vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            max-width: 1000px;
+            line-height: 1.2;
+            text-wrap: balance;
+            color: white;
+        }
+
+        .slide--title .slide-subtitle {
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+            margin-top: var(--space-md);
+            background: var(--gradient-secondary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 500;
+        }
+
+        .slide--title .slide-content {
+            margin-top: auto;
+            padding-top: var(--space-xl);
+        }
+
+        .slide--title .slide-content p {
+            font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+            margin-bottom: var(--space-sm);
+            color: #94a3b8;
+        }
+
+        .slide--title .slide-number {
+            background: rgba(255, 255, 255, 0.1);
+            -webkit-background-clip: padding-box;
+            background-clip: padding-box;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 0.3em 0.6em;
+            border-radius: 6px;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            -webkit-text-fill-color: initial;
+        }
+
+        /* Frosted glass UI on dark slides */
+        .on-dark-slide .nav-controls {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .on-dark-slide .nav-btn {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .on-dark-slide .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .on-dark-slide .slide-counter {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .on-dark-slide .slide-dots .dot {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .on-dark-slide .slide-dots .dot:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .on-dark-slide .slide-dots .dot.active {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 16px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Two column layout */
+        .slide--two-col {
+            display: grid;
+            grid-template-columns: minmax(220px, 320px) 1fr 1fr;
+            gap: var(--space-xl);
+            align-items: center;
+        }
+
+        .slide--two-col .slide-header {
+            grid-column: 1;
+            border-right: 3px solid transparent;
+            border-image: var(--gradient-secondary) 1;
+            padding-right: var(--space-lg);
+            height: 60%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide--two-col .slide-title {
+            font-size: clamp(2rem, 4vw, 2.8rem);
+        }
+
+        .slide--two-col .slide-subtitle {
+            font-size: clamp(1rem, 1.8vw, 1.2rem);
+        }
+
+        .slide--two-col .col {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .slide--two-col .col-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: var(--space-sm);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Split layout - asymmetric */
+        .slide--split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 0;
+            gap: 0;
+        }
+
+        .slide--split .slide-left {
+            padding: var(--space-xl);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide--split .slide-right {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-lg);
+            position: relative;
+        }
+
+        .slide--split .slide-right::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--gradient-primary);
+        }
+
+        /* ========================================
+           PLACEHOLDER ELEMENTS
+           ======================================== */
+        .placeholder-image {
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 4/3;
+            background: linear-gradient(135deg, white 0%, #f8fafc 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            position: relative;
+            box-shadow: 0 8px 32px rgba(37, 99, 235, 0.1);
+        }
+
+        .placeholder-image::before {
+            content: '';
+            position: absolute;
+            inset: 12px;
+            border: 2px dashed rgba(37, 99, 235, 0.2);
+            border-radius: 10px;
+        }
+
+        .placeholder-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            border-radius: 16px 16px 0 0;
+        }
+
+        .placeholder-chart {
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, white 0%, #f8fafc 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(37, 99, 235, 0.1);
+        }
+
+        .placeholder-chart::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-secondary);
+        }
+
+        /* Decorative chart bars */
+        .placeholder-chart::before {
+            content: '';
+            position: absolute;
+            bottom: 15%;
+            left: 10%;
+            right: 10%;
+            height: 50%;
+            background:
+                linear-gradient(to right,
+                    rgba(37, 99, 235, 0.3) 0%, rgba(37, 99, 235, 0.3) 10%,
+                    transparent 10%, transparent 15%,
+                    rgba(6, 182, 212, 0.3) 15%, rgba(6, 182, 212, 0.3) 30%,
+                    transparent 30%, transparent 35%,
+                    rgba(139, 92, 246, 0.3) 35%, rgba(139, 92, 246, 0.3) 48%,
+                    transparent 48%, transparent 53%,
+                    rgba(37, 99, 235, 0.3) 53%, rgba(37, 99, 235, 0.3) 75%,
+                    transparent 75%, transparent 80%,
+                    rgba(236, 72, 153, 0.3) 80%, rgba(236, 72, 153, 0.3) 90%,
+                    transparent 90%
+                );
+        }
+
+        /* Quote styling */
+        .quote {
+            font-family: var(--font-display);
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 400;
+            font-style: normal;
+            color: var(--text-secondary);
+            padding-left: var(--space-md);
+            border-left: 4px solid;
+            border-image: linear-gradient(180deg, var(--accent), var(--accent-light)) 1;
+            margin: var(--space-md) 0;
+            max-width: 55ch;
+            line-height: 1.4;
+        }
+
+        .quote-author {
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            font-style: normal;
+            color: var(--text-muted);
+            margin-top: var(--space-sm);
+        }
+
+        /* ========================================
+           NAVIGATION & UI
+           ======================================== */
+        .nav-controls {
+            position: fixed;
+            bottom: var(--space-md);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 16px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(37, 99, 235, 0.1);
+            backdrop-filter: blur(12px);
+            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .nav-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            color: var(--accent);
+        }
+
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        .nav-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .slide-counter {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            min-width: 50px;
+            text-align: center;
+            letter-spacing: 0.02em;
+            transition: color 0.4s ease;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease-out;
+            z-index: 100;
+            will-change: width;
+        }
+
+        /* Slide dots */
+        .slide-dots {
+            position: fixed;
+            right: var(--space-md);
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease-out;
+            will-change: transform;
+        }
+
+        .dot:hover {
+            background: var(--accent-light);
+            transform: scale(1.2);
+        }
+
+        .dot.active {
+            background: var(--gradient-primary);
+            transform: scale(1.4);
+            box-shadow: 0 0 12px rgba(37, 99, 235, 0.5);
+        }
+
+        /* ========================================
+           METADATA & FOOTER
+           ======================================== */
+        .slide-meta {
+            position: absolute;
+            bottom: var(--space-md);
+            left: var(--space-xl);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .slide-number {
+            position: absolute;
+            bottom: var(--space-md);
+            right: var(--space-xl);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.02em;
+        }
+
+        /* ========================================
+           SPECIAL ELEMENTS
+           ======================================== */
+        .highlight {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.25em 0.7em;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: 0.85em;
+            border-radius: 6px;
+            font-weight: 600;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+
+        .tag--cyan {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(37, 99, 235, 0.15) 100%);
+            color: var(--accent-tertiary);
+            border-color: rgba(6, 182, 212, 0.2);
+        }
+
+        .tag--purple {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);
+            color: var(--accent-secondary);
+            border-color: rgba(139, 92, 246, 0.2);
+        }
+
+        .card {
+            background: white;
+            padding: var(--space-md) var(--space-lg);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.08);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-primary);
+        }
+
+        .card:nth-child(2)::before {
+            background: var(--gradient-secondary);
+        }
+
+        .card:nth-child(3)::before {
+            background: linear-gradient(180deg, #8b5cf6 0%, #ec4899 100%);
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+            color: var(--text-primary);
+        }
+
+        .card-text {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Grid for cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+        }
+
+        .slide--standard .card-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        /* ========================================
+           RESPONSIVE ADJUSTMENTS
+           ======================================== */
+        @media (max-width: 900px) {
+            .slide--standard {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+
+            .slide--standard .slide-header {
+                border-right: none;
+                border-bottom: 3px solid transparent;
+                border-image: var(--gradient-primary) 1;
+                padding-right: 0;
+                padding-bottom: var(--space-md);
+                height: auto;
+            }
+
+            .slide--two-col {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto 1fr;
+            }
+
+            .slide--two-col .slide-header {
+                grid-column: 1 / -1;
+                border-right: none;
+                border-bottom: 3px solid transparent;
+                border-image: var(--gradient-secondary) 1;
+                padding-right: 0;
+                padding-bottom: var(--space-md);
+                height: auto;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: var(--space-lg) var(--space-md);
+            }
+
+            .slide--split {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr;
+            }
+
+            .slide--split .slide-right::before {
+                display: none;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .slide-dots {
+                display: none;
+            }
+
+            .nav-controls {
+                bottom: var(--space-sm);
+            }
+        }
+
+        /* ========================================
+           ANIMATIONS - GPU accelerated
+           ======================================== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 24px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+
+        .slide .slide-title,
+        .slide .accent-line,
+        .slide .slide-subtitle,
+        .slide .slide-content,
+        .slide .slide-header,
+        .slide .slide-main,
+        .slide .col {
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+        }
+
+        .slide.active .slide-header {
+            animation: fadeInUp 0.35s ease-out backwards;
+        }
+
+        .slide.active .slide-main {
+            animation: fadeInUp 0.35s ease-out 0.1s backwards;
+        }
+
+        .slide.active .slide-title {
+            animation: fadeInUp 0.35s ease-out backwards;
+        }
+
+        .slide.active .accent-line {
+            animation: fadeInUp 0.35s ease-out 0.05s backwards;
+        }
+
+        .slide.active .slide-subtitle {
+            animation: fadeInUp 0.35s ease-out 0.1s backwards;
+        }
+
+        .slide.active .slide-content {
+            animation: fadeInUp 0.35s ease-out 0.15s backwards;
+        }
+
+        .slide.active .col {
+            animation: fadeInUp 0.35s ease-out 0.1s backwards;
+        }
+
+        .slide.active .col:nth-child(3) {
+            animation-delay: 0.15s;
+        }
+
+        /* ========================================
+           PRINT STYLES
+           ======================================== */
+        @media print {
+            /* Force landscape and proper page sizing */
+            @page {
+                size: landscape;
+                margin: 0;
+            }
+
+            /* Reset body for print */
+            html, body {
+                width: 100%;
+                height: auto;
+                overflow: visible;
+                background: white;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            /* Presentation container reset */
+            .presentation {
+                width: auto;
+                height: auto;
+                overflow: visible;
+                position: static;
+            }
+
+            /* Hide navigation elements */
+            .progress-bar,
+            .nav-controls,
+            .slide-dots {
+                display: none !important;
+            }
+
+            /* Show all slides, one per page */
+            .slide {
+                position: relative !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                transform: none !important;
+                width: 100vw;
+                height: 100vh;
+                page-break-after: always;
+                page-break-inside: avoid;
+                break-after: page;
+                break-inside: avoid;
+                display: flex !important;
+                background: var(--bg-primary) !important;
+            }
+
+            /* Hide dot grid for print */
+            .slide::before,
+            .slide::after {
+                display: none !important;
+            }
+
+            /* Last slide shouldn't have page break after */
+            .slide:last-of-type {
+                page-break-after: auto;
+                break-after: auto;
+            }
+
+            /* Remove animations */
+            .slide * {
+                animation: none !important;
+                transition: none !important;
+            }
+
+            /* Ensure split layouts work in print */
+            .slide--split {
+                flex-direction: row !important;
+            }
+
+            .slide--split .slide-left,
+            .slide--split .slide-right {
+                flex: 1 !important;
+                height: auto !important;
+            }
+
+            /* Two column layout for print */
+            .slide--two-col .slide-body {
+                grid-template-columns: 1fr 1fr !important;
+            }
+
+            /* Adjust typography for print */
+            .slide-title {
+                font-size: 3rem !important;
+            }
+
+            .slide--title .slide-title {
+                font-size: 3.5rem !important;
+            }
+
+            .slide-subtitle {
+                font-size: 1.5rem !important;
+            }
+
+            .slide-content {
+                font-size: 1.25rem !important;
+            }
+
+            /* Ensure accent line prints correctly */
+            .accent-line::before {
+                background: var(--accent) !important;
+            }
+
+            .accent-line::after {
+                background: var(--accent-light) !important;
+            }
+
+            .card {
+                box-shadow: none !important;
+                border: 1px solid var(--border) !important;
+            }
+
+            /* Adjust slide metadata for print */
+            .slide-meta,
+            .slide-number {
+                position: absolute;
+                bottom: 1.5rem;
+            }
+
+            .slide-meta {
+                left: 3rem;
+            }
+
+            .slide-number {
+                right: 3rem;
+            }
+
+            /* Placeholder elements for print */
+            .placeholder-image,
+            .placeholder-chart {
+                border: 2px dashed var(--border) !important;
+            }
+
+            /* Ensure quote styling prints well */
+            .quote {
+                border-left: 3px solid var(--accent) !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Progress Bar -->
+        <div class="progress-bar" id="progressBar"></div>
+
+        <!-- Slide 1: Título -->
+        <section class="slide slide--title active" data-slide="1">
+            <div class="accent-line"></div>
+            <h1 class="slide-title">Ferramenta baseada em LLMs para acompanhar aulas em idiomas que o usuário não entende</h1>
+            <p class="slide-subtitle">SOLAS: Um Pipeline de Código Aberto</p>
+            <div class="slide-content">
+                <p>André Florencio Carini</p>
+                <p style="color: var(--text-muted);">Orientador: Prof. Dr. André Inacio Reis</p>
+                <p style="color: var(--text-muted);">UFRGS — Instituto de Informática — Novembro 2025</p>
+            </div>
+            <span class="slide-number">01</span>
+        </section>
+
+        <!-- Slide 2: Agenda -->
+        <section class="slide slide--standard" data-slide="2">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Agenda</h2>
+                <p class="slide-subtitle">O que veremos hoje</p>
+            </div>
+            <div class="slide-main">
+                <div class="slide-content">
+                    <ol>
+                        <li><strong>O Problema</strong> — Barreira linguística na educação</li>
+                        <li><strong>A Solução</strong> — Pipeline SOLAS</li>
+                        <li><strong>Tecnologias</strong> — ASR, LLMs e TTS</li>
+                        <li><strong>Resultados</strong> — Avaliação e tradeoffs</li>
+                        <li><strong>Conclusões</strong> — Contribuições e trabalhos futuros</li>
+                    </ol>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">02</span>
+        </section>
+
+        <!-- Slide 3: O Problema - Cenário -->
+        <section class="slide slide--standard" data-slide="3">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">O Problema</h2>
+                <p class="slide-subtitle">Um cenário comum</p>
+            </div>
+            <div class="slide-main">
+                <div class="slide-content">
+                    <p>Imagine um estudante que precisa assistir uma aula em um idioma que não domina completamente...</p>
+                    <p>O melhor conteúdo educacional muitas vezes está disponível apenas em certos idiomas — inglês, alemão, mandarim.</p>
+                    <p>Como acessar esse conhecimento sem dominar o idioma?</p>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">03</span>
+        </section>
+
+        <!-- Slide 4: O Problema - Carga Cognitiva -->
+        <section class="slide slide--standard" data-slide="4">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Carga Cognitiva</h2>
+                <p class="slide-subtitle">O desafio duplo</p>
+            </div>
+            <div class="slide-main">
+                <div class="slide-content">
+                    <p>O estudante enfrenta <span class="highlight">duas tarefas simultâneas</span>:</p>
+                    <ul>
+                        <li>Processar e entender o idioma estrangeiro</li>
+                        <li>Aprender o conteúdo técnico da aula</li>
+                    </ul>
+                    <p>Essa sobrecarga cognitiva prejudica a absorção do conhecimento.</p>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">04</span>
+        </section>
+
+        <!-- Slide 5: Soluções Existentes -->
+        <section class="slide slide--standard" data-slide="5">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Soluções Existentes</h2>
+                <p class="slide-subtitle">O que já existe</p>
+            </div>
+            <div class="slide-main">
+                <div class="slide-content">
+                    <ul>
+                        <li><span class="tag">NotebookLM</span> (Google) — gera podcasts a partir de documentos</li>
+                        <li>Serviços de transcrição e tradução na nuvem</li>
+                        <li>Legendas automáticas do YouTube</li>
+                        <li>Ferramentas de tradução como Google Translate, DeepL</li>
+                    </ul>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">05</span>
+        </section>
+
+        <!-- Slide 6: Problemas das Soluções -->
+        <section class="slide slide--standard" data-slide="6">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Limitações</h2>
+                <p class="slide-subtitle">Por que não são ideais</p>
+            </div>
+            <div class="slide-main">
+                <div class="slide-content">
+                    <ul>
+                        <li><strong>Dependência de cloud</strong> — necessidade de conexão à internet</li>
+                        <li><strong>Privacidade</strong> — dados enviados para servidores externos</li>
+                        <li><strong>Custos recorrentes</strong> — assinaturas ou limites de uso</li>
+                        <li><strong>Código fechado</strong> — impossível auditar ou modificar</li>
+                    </ul>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">06</span>
+        </section>
+
+        <!-- Slide 7: SOLAS - Nossa Proposta -->
+        <section class="slide slide--title" data-slide="7">
+            <div class="accent-line"></div>
+            <h1 class="slide-title">SOLAS</h1>
+            <p class="slide-subtitle">Uma alternativa local e open-source</p>
+            <div class="slide-content">
+                <p>Execução 100% local • Modelos de código aberto • Privacidade garantida</p>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">07</span>
+        </section>
+
+        <!-- Slide 8: Conceitos - ASR -->
+        <section class="slide slide--split" data-slide="8">
+            <div class="slide-left">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">ASR</h2>
+                <p class="slide-subtitle">Automatic Speech Recognition</p>
+                <div class="slide-content">
+                    <p>Converte <strong>áudio em texto</strong>.</p>
+                    <p>Utilizamos o <span class="tag">Whisper</span> da OpenAI:</p>
+                    <ul>
+                        <li>Suporte multilíngue (99 idiomas)</li>
+                        <li>Três tamanhos: tiny, small, large</li>
+                        <li>Open-weights disponíveis</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="slide-right">
+                <div class="placeholder-image">
+                    Diagrama ASR
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">08</span>
+        </section>
+
+        <!-- Slide 9: Conceitos - LLM -->
+        <section class="slide slide--split" data-slide="9">
+            <div class="slide-left">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">LLMs</h2>
+                <p class="slide-subtitle">Large Language Models</p>
+                <div class="slide-content">
+                    <p>Modelos de linguagem para <strong>processamento de texto</strong>:</p>
+                    <ul>
+                        <li>Tradução para idioma alvo</li>
+                        <li>Geração de resumos</li>
+                        <li>Criação de scripts de podcast</li>
+                    </ul>
+                    <p>Modelos testados: <span class="tag">Mistral-7B</span>, <span class="tag">Qwen2</span>, <span class="tag">Phi-3</span></p>
+                </div>
+            </div>
+            <div class="slide-right">
+                <div class="placeholder-image">
+                    Diagrama LLM
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">09</span>
+        </section>
+
+        <!-- Slide 10: Conceitos - TTS -->
+        <section class="slide slide--split" data-slide="10">
+            <div class="slide-left">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">TTS</h2>
+                <p class="slide-subtitle">Text-to-Speech</p>
+                <div class="slide-content">
+                    <p>Converte <strong>texto em áudio</strong>.</p>
+                    <p>Utilizamos o <span class="tag">XTTS v2</span> da Coqui:</p>
+                    <ul>
+                        <li>Clonagem de voz (zero-shot)</li>
+                        <li>Apenas 6-15 segundos de amostra</li>
+                        <li>Vozes distintas para cada host do podcast</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="slide-right">
+                <div class="placeholder-image">
+                    Diagrama TTS
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">10</span>
+        </section>
+
+        <!-- Slide 11: O Pipeline SOLAS -->
+        <section class="slide slide--split" data-slide="11">
+            <div class="slide-left">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">O Pipeline</h2>
+                <p class="slide-subtitle">Do áudio ao material de estudo</p>
+                <div class="slide-content">
+                    <p><strong>Entrada:</strong> Áudio de uma aula</p>
+                    <p><strong>Saídas:</strong></p>
+                    <ol>
+                        <li>Transcrição (idioma original)</li>
+                        <li>Tradução (idioma alvo)</li>
+                        <li>Resumo em tópicos</li>
+                        <li>Script de podcast</li>
+                        <li>Áudio do podcast</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="slide-right">
+                <div class="placeholder-image">
+                    Diagrama do Pipeline
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">11</span>
+        </section>
+
+        <!-- Slide 12: Stack Tecnológico -->
+        <section class="slide slide--standard" data-slide="12">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Stack</h2>
+                <p class="slide-subtitle">Tecnologias utilizadas</p>
+            </div>
+            <div class="slide-main">
+                <div class="card-grid">
+                    <div class="card">
+                        <h4 class="card-title">Whisper</h4>
+                        <p class="card-text">ASR — OpenAI<br>tiny (39M), small (244M), large (1.5B)</p>
+                    </div>
+                    <div class="card">
+                        <h4 class="card-title">LLMs</h4>
+                        <p class="card-text">Mistral-7B, Qwen2, Phi-3<br>0.5B a 7B parâmetros</p>
+                    </div>
+                    <div class="card">
+                        <h4 class="card-title">XTTS v2</h4>
+                        <p class="card-text">TTS — Coqui<br>Clonagem de voz zero-shot</p>
+                    </div>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">12</span>
+        </section>
+
+        <!-- Slide 13: Implementação -->
+        <section class="slide slide--standard" data-slide="13">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Implementação</h2>
+                <p class="slide-subtitle">Como usar o SOLAS</p>
+            </div>
+            <div class="slide-main">
+                <div class="slide-content">
+                    <ul>
+                        <li>Entregue como <span class="tag">Jupyter Notebook</span></li>
+                        <li>Executa no <strong>Google Colab</strong> (GPU T4 gratuita)</li>
+                        <li>Também funciona localmente com GPU CUDA</li>
+                        <li>Requisito mínimo: ~12GB VRAM</li>
+                        <li>Código disponível no GitHub</li>
+                    </ul>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">13</span>
+        </section>
+
+        <!-- Slide 14: Metodologia -->
+        <section class="slide slide--standard" data-slide="14">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Metodologia</h2>
+                <p class="slide-subtitle">Como avaliamos o SOLAS</p>
+            </div>
+            <div class="slide-main">
+                <div class="slide-content">
+                    <p><strong>Corpus:</strong> Aula de 30 minutos (Português → Inglês)</p>
+                    <p><strong>Variáveis testadas:</strong></p>
+                    <ul>
+                        <li>Tamanho do modelo ASR (tiny, small, large)</li>
+                        <li>Tamanho do LLM (0.5B a 7B parâmetros)</li>
+                        <li>Quantização (4-bit NF4 vs precisão total)</li>
+                    </ul>
+                    <p><strong>Métricas:</strong> Tempo de processamento, uso de VRAM, qualidade subjetiva</p>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">14</span>
+        </section>
+
+        <!-- Slide 15: Resultados - ASR -->
+        <section class="slide slide--split" data-slide="15">
+            <div class="slide-left">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Resultados: ASR</h2>
+                <p class="slide-subtitle">Comparação dos modelos Whisper</p>
+                <div class="slide-content">
+                    <ul>
+                        <li><strong>Whisper-tiny:</strong> Rápido, mas com artefatos de repetição</li>
+                        <li><strong>Whisper-small:</strong> Melhor custo-benefício — 40% mais rápido que large</li>
+                        <li><strong>Whisper-large:</strong> Melhor qualidade, maior custo computacional</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="slide-right">
+                <div class="placeholder-chart">
+                    Gráfico ASR
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">15</span>
+        </section>
+
+        <!-- Slide 16: Resultados - LLMs -->
+        <section class="slide slide--split" data-slide="16">
+            <div class="slide-left">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Resultados: LLMs</h2>
+                <p class="slide-subtitle">Impacto do tamanho do modelo</p>
+                <div class="slide-content">
+                    <ul>
+                        <li><strong>0.5B - 1.5B:</strong> Scripts de podcast de baixa qualidade</li>
+                        <li><strong>3.8B (Phi-3):</strong> Qualidade mínima viável</li>
+                        <li><strong>7B:</strong> Qualidade aceitável para uso prático</li>
+                    </ul>
+                    <p>Modelos maiores = melhor qualidade, mais recursos.</p>
+                </div>
+            </div>
+            <div class="slide-right">
+                <div class="placeholder-chart">
+                    Gráfico LLMs
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">16</span>
+        </section>
+
+        <!-- Slide 17: Resultados - Quantização -->
+        <section class="slide slide--split" data-slide="17">
+            <div class="slide-left">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Resultados: Quantização</h2>
+                <p class="slide-subtitle">O tradeoff memória vs. tempo</p>
+                <div class="slide-content">
+                    <ul>
+                        <li><strong>Economia de VRAM:</strong> 44-68%</li>
+                        <li><strong>Aumento no tempo:</strong> 71-160%</li>
+                        <li>Modelos maiores sofrem menos penalidade</li>
+                        <li>Modelos menores: degradação de qualidade perceptível</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="slide-right">
+                <div class="placeholder-chart">
+                    Gráfico Quantização
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">17</span>
+        </section>
+
+        <!-- Slide 18: Principais Descobertas -->
+        <section class="slide slide--standard" data-slide="18">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Descobertas</h2>
+                <p class="slide-subtitle">O que aprendemos</p>
+            </div>
+            <div class="slide-main">
+                <div class="card-grid">
+                    <div class="card">
+                        <h4 class="card-title">Execução Local Funciona</h4>
+                        <p class="card-text">GPUs consumer (T4, 16GB) conseguem rodar o pipeline completo.</p>
+                    </div>
+                    <div class="card">
+                        <h4 class="card-title">Tamanho Importa</h4>
+                        <p class="card-text">Modelos &lt; 3.8B produzem scripts ruins. 7B recomendado.</p>
+                    </div>
+                    <div class="card">
+                        <h4 class="card-title">Quantização Viável</h4>
+                        <p class="card-text">Tradeoff aceitável para ambientes com pouca VRAM.</p>
+                    </div>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">18</span>
+        </section>
+
+        <!-- Slide 19: Limitações -->
+        <section class="slide slide--standard" data-slide="19">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Limitações</h2>
+                <p class="slide-subtitle">Escopo deste trabalho</p>
+            </div>
+            <div class="slide-main">
+                <div class="slide-content">
+                    <ul>
+                        <li>Testado em um único par de idiomas (PT → EN)</li>
+                        <li>Uma única aula de 30 minutos como corpus</li>
+                        <li>Sem estudos com usuários reais</li>
+                        <li>Protótipo de pesquisa, não produto final</li>
+                        <li>Tempo de processamento: 10-30 min por aula</li>
+                    </ul>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">19</span>
+        </section>
+
+        <!-- Slide 20: Conclusões -->
+        <section class="slide slide--standard" data-slide="20">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Conclusões</h2>
+                <p class="slide-subtitle">Contribuições</p>
+            </div>
+            <div class="slide-main">
+                <div class="slide-content">
+                    <p><strong>Viabilidade demonstrada:</strong> Modelos open-weight conseguem produzir materiais de estudo úteis em execução local.</p>
+                    <p><strong>Contribuições:</strong></p>
+                    <ul>
+                        <li>Pipeline funcional (SOLAS)</li>
+                        <li>Framework de avaliação reprodutível</li>
+                        <li>Dados empíricos sobre tradeoffs</li>
+                    </ul>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">20</span>
+        </section>
+
+        <!-- Slide 21: Trabalhos Futuros -->
+        <section class="slide slide--standard" data-slide="21">
+            <div class="slide-header">
+                <div class="accent-line"></div>
+                <h2 class="slide-title">Trabalhos Futuros</h2>
+                <p class="slide-subtitle">Próximos passos</p>
+            </div>
+            <div class="slide-main">
+                <div class="slide-content">
+                    <ul>
+                        <li>Estudos com usuários para validar eficácia educacional</li>
+                        <li>Suporte a mais pares de idiomas</li>
+                        <li>Otimização para processamento em tempo real</li>
+                        <li>Interface gráfica para usuários não-técnicos</li>
+                        <li>Integração com plataformas de ensino</li>
+                    </ul>
+                </div>
+            </div>
+            <span class="slide-meta">SOLAS — Defesa de TCC</span>
+            <span class="slide-number">21</span>
+        </section>
+
+        <!-- Slide 22: Obrigado -->
+        <section class="slide slide--title" data-slide="22">
+            <div class="accent-line"></div>
+            <h1 class="slide-title">Obrigado!</h1>
+            <p class="slide-subtitle">Perguntas?</p>
+            <div class="slide-content">
+                <p style="font-family: var(--font-mono); color: var(--accent);">github.com/andrecarini/SOLAS</p>
+            </div>
+            <span class="slide-number">22</span>
+        </section>
+
+        <!-- Slide Dots Navigation -->
+        <nav class="slide-dots" id="slideDots"></nav>
+
+        <!-- Bottom Navigation -->
+        <nav class="nav-controls">
+            <button class="nav-btn" id="prevBtn" aria-label="Previous slide">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <span class="slide-counter" id="slideCounter">1 / 22</span>
+            <button class="nav-btn" id="nextBtn" aria-label="Next slide">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+            </button>
+        </nav>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ========================================
+            // PRESENTATION CONTROLLER
+            // ========================================
+            const presentation = {
+                currentSlide: 1,
+                totalSlides: 0,
+                slides: [],
+                isAnimating: false,
+                scrollAccumulator: 0,
+                scrollThreshold: 50,
+                scrollResetTimer: null,
+
+                init() {
+                    this.slides = document.querySelectorAll('.slide');
+                    this.totalSlides = this.slides.length;
+                    this.createDots();
+                    this.bindEvents();
+                    this.updateUI();
+                },
+
+                createDots() {
+                    const dotsContainer = document.getElementById('slideDots');
+                    for (let i = 1; i <= this.totalSlides; i++) {
+                        const dot = document.createElement('button');
+                        dot.className = 'dot' + (i === 1 ? ' active' : '');
+                        dot.setAttribute('aria-label', `Go to slide ${i}`);
+                        dot.addEventListener('click', () => this.goToSlide(i));
+                        dotsContainer.appendChild(dot);
+                    }
+                },
+
+                bindEvents() {
+                    // Keyboard navigation
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+                            e.preventDefault();
+                            this.nextSlide();
+                        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                            e.preventDefault();
+                            this.prevSlide();
+                        } else if (e.key === 'Home') {
+                            e.preventDefault();
+                            this.goToSlide(1);
+                        } else if (e.key === 'End') {
+                            e.preventDefault();
+                            this.goToSlide(this.totalSlides);
+                        }
+                    });
+
+                    // Mouse wheel navigation with accumulator
+                    document.addEventListener('wheel', (e) => {
+                        if (this.isAnimating) return;
+
+                        // Reset accumulator after 150ms of no scrolling
+                        clearTimeout(this.scrollResetTimer);
+                        this.scrollResetTimer = setTimeout(() => {
+                            this.scrollAccumulator = 0;
+                        }, 150);
+
+                        // Accumulate scroll delta
+                        this.scrollAccumulator += e.deltaY;
+
+                        // Check if we've crossed the threshold
+                        if (Math.abs(this.scrollAccumulator) >= this.scrollThreshold) {
+                            if (this.scrollAccumulator > 0) {
+                                this.nextSlide();
+                            } else {
+                                this.prevSlide();
+                            }
+                            this.scrollAccumulator = 0;
+                        }
+                    }, { passive: true });
+
+                    // Button navigation
+                    document.getElementById('prevBtn').addEventListener('click', () => this.prevSlide());
+                    document.getElementById('nextBtn').addEventListener('click', () => this.nextSlide());
+
+                    // Touch support
+                    let touchStartY = 0;
+                    let touchStartX = 0;
+
+                    document.addEventListener('touchstart', (e) => {
+                        touchStartY = e.touches[0].clientY;
+                        touchStartX = e.touches[0].clientX;
+                    }, { passive: true });
+
+                    document.addEventListener('touchend', (e) => {
+                        const touchEndY = e.changedTouches[0].clientY;
+                        const touchEndX = e.changedTouches[0].clientX;
+                        const diffY = touchStartY - touchEndY;
+                        const diffX = touchStartX - touchEndX;
+
+                        // Horizontal swipe takes priority
+                        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                            if (diffX > 0) {
+                                this.nextSlide();
+                            } else {
+                                this.prevSlide();
+                            }
+                        } else if (Math.abs(diffY) > 50) {
+                            if (diffY > 0) {
+                                this.nextSlide();
+                            } else {
+                                this.prevSlide();
+                            }
+                        }
+                    }, { passive: true });
+                },
+
+                goToSlide(num) {
+                    if (num < 1 || num > this.totalSlides || num === this.currentSlide || this.isAnimating) {
+                        return;
+                    }
+
+                    this.isAnimating = true;
+                    const direction = num > this.currentSlide ? 1 : -1;
+
+                    // Update slide classes
+                    this.slides.forEach((slide, index) => {
+                        const slideNum = index + 1;
+                        slide.classList.remove('active', 'prev');
+
+                        if (slideNum === num) {
+                            slide.classList.add('active');
+                        } else if (slideNum < num) {
+                            slide.classList.add('prev');
+                        }
+                    });
+
+                    this.currentSlide = num;
+                    this.updateUI();
+
+                    setTimeout(() => {
+                        this.isAnimating = false;
+                    }, 400);
+                },
+
+                nextSlide() {
+                    if (this.currentSlide < this.totalSlides) {
+                        this.goToSlide(this.currentSlide + 1);
+                    }
+                },
+
+                prevSlide() {
+                    if (this.currentSlide > 1) {
+                        this.goToSlide(this.currentSlide - 1);
+                    }
+                },
+
+                updateUI() {
+                    // Update counter
+                    document.getElementById('slideCounter').textContent =
+                        `${this.currentSlide} / ${this.totalSlides}`;
+
+                    // Update progress bar
+                    const progress = ((this.currentSlide - 1) / (this.totalSlides - 1)) * 100;
+                    document.getElementById('progressBar').style.width = `${progress}%`;
+
+                    // Update dots
+                    const dots = document.querySelectorAll('.dot');
+                    dots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index + 1 === this.currentSlide);
+                    });
+
+                    // Update button states
+                    document.getElementById('prevBtn').style.opacity = this.currentSlide === 1 ? '0.3' : '1';
+                    document.getElementById('nextBtn').style.opacity = this.currentSlide === this.totalSlides ? '0.3' : '1';
+
+                    // Toggle dark slide class for frosted glass UI
+                    const currentSlideEl = this.slides[this.currentSlide - 1];
+                    const isDarkSlide = currentSlideEl.classList.contains('slide--title');
+                    document.querySelector('.presentation').classList.toggle('on-dark-slide', isDarkSlide);
+                }
+            };
+
+            // Initialize on DOM ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => presentation.init());
+            } else {
+                presentation.init();
+            }
+        })();
+    </script>
+</body>
+</html>
