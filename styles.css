@@ -322,6 +322,41 @@ body {
     background: var(--accent-tertiary);
 }
 
+/* Title slide with standard header layout */
+.slide--title .slide-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-md);
+    padding-bottom: var(--space-sm);
+    margin-bottom: var(--space-md);
+    border-bottom: 2px solid transparent;
+    border-image: var(--gradient-primary) 1;
+    flex-shrink: 0;
+    width: 100%;
+    align-self: stretch;
+}
+
+.slide--title .slide-header .accent-line {
+    justify-content: flex-start;
+    margin-bottom: 0;
+}
+
+.slide--title .slide-header .slide-title {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    margin-bottom: 0;
+}
+
+.slide--title .slide-header .slide-subtitle {
+    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+    margin-top: 0;
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: #94a3b8;
+    background-clip: unset;
+    color: #94a3b8;
+    font-weight: 400;
+}
+
 .slide--title .slide-title {
     font-size: clamp(2.4rem, 4.5vw, 3.5rem);
     font-weight: 700;
@@ -492,7 +527,7 @@ body {
 
 .slide--split .slide-body {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 0.7fr 1fr;
     gap: var(--space-xl);
     flex: 1;
     align-items: center;
@@ -910,6 +945,11 @@ body {
 
 .data-table tr:nth-child(even) {
     background: rgba(0, 0, 0, 0.02);
+}
+
+.data-table.compact th,
+.data-table.compact td {
+    padding: 0.2rem 0.4rem;
 }
 
 /* MOOC comparison tables */
