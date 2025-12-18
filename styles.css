@@ -32,6 +32,9 @@
     --space-lg: 1.5rem;
     --space-xl: 2.5rem;
 
+    /* Border radius */
+    --radius-md: 12px;
+
     /* Transitions */
     --transition-fast: 0.2s ease;
     --transition-smooth: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -89,8 +92,6 @@ body {
         opacity 0.3s ease-out,
         transform 0.3s ease-out;
     background: var(--bg-primary);
-    will-change: transform, opacity;
-    backface-visibility: hidden;
     counter-increment: slide-counter;
 }
 
@@ -704,7 +705,6 @@ body {
     background: var(--gradient-primary);
     transition: width 0.3s ease-out;
     z-index: 100;
-    will-change: width;
 }
 
 /* Slide dots */
@@ -727,7 +727,6 @@ body {
     border: 1px solid transparent;
     cursor: pointer;
     transition: all 0.3s ease-out;
-    will-change: transform;
 }
 
 .dot:hover {
@@ -873,15 +872,30 @@ body {
 /* Data tables for results */
 .data-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     font-size: 0.9rem;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.95);
 }
 
 .data-table th,
 .data-table td {
     padding: 0.4rem 0.6rem;
     text-align: center;
-    border: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+}
+
+.data-table th:last-child,
+.data-table td:last-child {
+    border-right: none;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
 }
 
 .data-table th {
@@ -896,6 +910,63 @@ body {
 
 .data-table tr:nth-child(even) {
     background: rgba(0, 0, 0, 0.02);
+}
+
+/* MOOC comparison tables */
+.mooc-table-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--border);
+}
+
+.mooc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.mooc-table th,
+.mooc-table td {
+    padding: 0.35rem 0.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.mooc-table th {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.mooc-table td {
+    color: var(--text-secondary);
+}
+
+.mooc-table td:nth-child(2),
+.mooc-table td:nth-child(3),
+.mooc-table td:nth-child(4),
+.mooc-table th:nth-child(2),
+.mooc-table th:nth-child(3),
+.mooc-table th:nth-child(4) {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.mooc-table .highlight-row {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.mooc-table .highlight-row td {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.mooc-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
 /* Reference list styling */
@@ -1188,8 +1259,7 @@ body {
 .slide .slide-header,
 .slide .slide-main,
 .slide .col {
-    will-change: transform, opacity;
-    backface-visibility: hidden;
+    /* GPU hints removed to fix compositing issues */
 }
 
 .slide.active .slide-header {

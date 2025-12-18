@@ -133,9 +133,15 @@
             this.currentSlide = num;
             this.updateUI();
 
+            // Reset animation lock - use shorter timeout and add safety reset
             setTimeout(() => {
                 this.isAnimating = false;
-            }, 400);
+            }, 350);
+
+            // Safety: ensure isAnimating is always reset even if something goes wrong
+            setTimeout(() => {
+                this.isAnimating = false;
+            }, 500);
         },
 
         nextSlide() {
